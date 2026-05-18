@@ -4,7 +4,7 @@
 
 # 📌 Estado del Proyecto
 
-**Última actualización:** 2026-05-17
+**Última actualización:** 2026-05-18
 
 ## ✅ Módulos completados
 
@@ -69,9 +69,11 @@
 
 | Módulo | Estado | Notas |
 |--------|--------|-------|
-| Debug listado servicios | ✅ Resuelto | Causa: grants de tabla faltantes en BD. Fix: aplicar migración `fix_servicios_grants.sql` en Supabase SQL Editor |
-| Credenciales Wompi | ⏳ Pendiente | Agregar a `.env.local`: `WOMPI_PUBLIC_KEY`, `WOMPI_INTEGRITY_KEY`, `WOMPI_EVENTS_KEY` |
-| Configurar webhook Wompi | ⏳ Pendiente | URL: `https://dominio/api/webhooks/wompi` |
+| Debug listado servicios | ✅ Resuelto | Causa: grants faltantes en BD. Migración `fix_servicios_grants.sql` aplicada |
+| Credenciales Wompi | ✅ Resuelto | Las 4 keys configuradas en `.env.local` (pub, prv, integrity, events) |
+| Trial días restantes | ✅ Resuelto | Stat card muestra `Xd restantes`. Suscripción trial creada en BD |
+| Checkout Wompi | ✅ Resuelto | Funciona en sandbox con ngrok. Tarjeta test: `4242 4242 4242 4242` |
+| Configurar webhook Wompi | ⏳ Pendiente | URL: `https://dominio/api/webhooks/wompi` (requiere deploy) |
 | `/dashboard/configuracion` | ⏳ Pendiente | Editar datos de la barbería |
 | `/dashboard/citas/nueva` | ⏳ Pendiente | Creación manual de citas |
 | `/b/[slug]` | ⏳ Pendiente | Página pública de agendamiento para clientes |
@@ -95,7 +97,7 @@
 ### Migraciones aplicadas
 - `supabase/schema.sql` — Esquema inicial completo
 - `supabase/migrations/001_add_trial_and_payments.sql` — Enum trial + columnas Wompi + tabla pagos
-- `supabase/migrations/20260518043635_fix_servicios_grants.sql` — Grants explícitos para roles `anon` y `authenticated` *(pendiente de aplicar)*
+- `supabase/migrations/20260518043635_fix_servicios_grants.sql` — Grants explícitos para roles `anon` y `authenticated` ✅ aplicada
 
 ---
 
