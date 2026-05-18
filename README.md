@@ -69,7 +69,7 @@
 
 | Módulo | Estado | Notas |
 |--------|--------|-------|
-| Debug listado servicios | 🔄 En progreso | Se agregó console.log para diagnosticar por qué no muestra servicios existentes |
+| Debug listado servicios | ✅ Resuelto | Causa: grants de tabla faltantes en BD. Fix: aplicar migración `fix_servicios_grants.sql` en Supabase SQL Editor |
 | Credenciales Wompi | ⏳ Pendiente | Agregar a `.env.local`: `WOMPI_PUBLIC_KEY`, `WOMPI_INTEGRITY_KEY`, `WOMPI_EVENTS_KEY` |
 | Configurar webhook Wompi | ⏳ Pendiente | URL: `https://dominio/api/webhooks/wompi` |
 | `/dashboard/configuracion` | ⏳ Pendiente | Editar datos de la barbería |

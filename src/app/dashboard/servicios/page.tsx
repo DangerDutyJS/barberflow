@@ -180,7 +180,8 @@ type Orden = "nombre" | "precio_asc" | "precio_desc" | "duracion";
 
 export default function ServiciosPage() {
   const router = useRouter();
-  const supabase = createClient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const supabase = useMemo(() => createClient(), []);
 
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [barberia, setBarberia] = useState<{ id: string; nombre: string } | null>(null);
@@ -188,8 +189,8 @@ export default function ServiciosPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const [loadingData, setLoadingData] = useState(true);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [errorMsg, setErrorMsg]       = useState<string | null>(null);
+  const [showModal, setShowModal]     = useState(false);
   const [editando, setEditando] = useState<Servicio | null>(null);
   const [saving, setSaving] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -205,8 +206,7 @@ export default function ServiciosPage() {
       setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario");
       setAvatarUrl(user.user_metadata?.avatar_url ?? null);
 
-      const { data: bar, error: barError } = await supabase.from("barberias").select("id, nombre").eq("owner_id", user.id).single();
-      console.log("[servicios] barberia encontrada:", { bar, barError, userId: user.id });
+      const { data: bar } = await supabase.from("barberias").select("id, nombre").eq("owner_id", user.id).single();
       if (!bar) { router.push("/onboarding"); return; }
       setBarberia(bar);
       await cargarServicios(bar.id);
@@ -216,11 +216,12 @@ export default function ServiciosPage() {
   }, []);
 
   async function cargarServicios(barberiaId: string) {
-    console.log("[servicios] consultando con barberia_id:", barberiaId);
-    const { data, error } = await supabase.from("servicios").select("*").eq("barberia_id", barberiaId).order("created_at", { ascending: true });
-    console.log("[servicios] resultado:", { data, error });
+    const { data, error } = await supabase
+      .from("servicios")
+      .select("*")
+      .eq("barberia_id", barberiaId)
+      .order("created_at", { ascending: true });
     if (error) {
-      console.error("Error cargando servicios:", error);
       setErrorMsg(`Error: ${error.message} (${error.code})`);
     } else {
       setErrorMsg(null);
