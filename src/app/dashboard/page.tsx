@@ -1,0 +1,194 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import SignOutButton from "@/components/SignOutButton";
+import { getEstadoSuscripcion } from "@/lib/subscriptions";
+import type { Suscripcion } from "@/types/database";
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) redirect("/auth/login");
+
+  // Verificar si tiene barbería — si no, ir al onboarding
+  const { data: barberia } = await supabase
+    .from("barberias")
+    .select("id, nombre, slug, direccion, telefono")
+    .eq("owner_id", user.id)
+    .single();
+
+  if (!barberia) redirect("/onboarding");
+
+  const { data: suscripcion } = await supabase
+    .from("suscripciones")
+    .select("plan, estado, fecha_fin, ciclo_facturacion, wompi_referencia, wompi_transaction_id")
+    .eq("barberia_id", barberia.id)
+    .single();
+
+  const estadoSub = getEstadoSuscripcion(suscripcion as Suscripcion | null);
+
+  // Estadísticas básicas
+  const [{ count: totalCitas }, { count: citasHoy }, { count: totalBarberos }] =
+    await Promise.all([
+      supabase.from("citas").select("*", { count: "exact", head: true }).eq("barberia_id", barberia.id),
+      supabase.from("citas").select("*", { count: "exact", head: true })
+        .eq("barberia_id", barberia.id)
+        .eq("fecha", new Date().toISOString().split("T")[0]),
+      supabase.from("barberos").select("*", { count: "exact", head: true })
+        .eq("barberia_id", barberia.id).eq("activo", true),
+    ]);
+
+  const nombre = user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario";
+  const avatar = user.user_metadata?.avatar_url;
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white">
+      {/* Header */}
+      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-xl">✂</span>
+              <span className="text-lg font-bold tracking-tight">
+                <span className="text-white">Barber</span>
+                <span className="text-gold">Flow</span>
+              </span>
+            </Link>
+            <span className="hidden sm:block text-zinc-700">|</span>
+            <span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              {avatar ? (
+                <img src={avatar} alt={nombre} className="w-8 h-8 rounded-full border border-zinc-700" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
+                  {nombre[0].toUpperCase()}
+                </div>
+              )}
+              <span className="text-sm text-zinc-300 hidden sm:block">{nombre}</span>
+            </div>
+            <SignOutButton />
+          </div>
+        </div>
+      </header>
+
+      {/* Banner de trial / suscripción vencida */}
+      {estadoSub.mostrarBannerTrial && (
+        <div className={`border-b px-4 py-3 text-sm text-center ${
+          estadoSub.expirada
+            ? "border-red-900/50 bg-red-950/60 text-red-300"
+            : estadoSub.diasRestantes !== null && estadoSub.diasRestantes <= 2
+            ? "border-amber-900/50 bg-amber-950/60 text-amber-300"
+            : "border-gold/20 bg-gold/5 text-zinc-300"
+        }`}>
+          {estadoSub.expirada ? (
+            <>
+              Tu período de prueba ha terminado.{" "}
+              <Link href="/dashboard/upgrade" className="font-semibold underline underline-offset-2">
+                Activa tu plan para continuar →
+              </Link>
+            </>
+          ) : (
+            <>
+              Trial activo ·{" "}
+              <span className="font-semibold">
+                {estadoSub.diasRestantes} día{estadoSub.diasRestantes !== 1 ? "s" : ""} restante{estadoSub.diasRestantes !== 1 ? "s" : ""}
+              </span>
+              {" "}—{" "}
+              <Link href="/dashboard/upgrade" className="font-semibold underline underline-offset-2">
+                Upgrade a Pro →
+              </Link>
+            </>
+          )}
+        </div>
+      )}
+
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Bienvenida */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold mb-1">
+            Bienvenido, <span className="text-gold">{nombre.split(" ")[0]}</span> 👋
+          </h1>
+          <p className="text-zinc-500 text-sm">
+            Panel de control · <span className="text-zinc-400">{barberia.nombre}</span>
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Citas hoy",        value: citasHoy   ?? 0, icon: "📅", color: "text-blue-400"  },
+            { label: "Total citas",      value: totalCitas ?? 0, icon: "📊", color: "text-purple-400" },
+            { label: "Barberos activos", value: totalBarberos ?? 0, icon: "👥", color: "text-green-400"  },
+            { label: "Plan activo", value: estadoSub.esPro ? "Pro" : estadoSub.esTrial ? "Trial" : "Gratis", icon: "⭐", color: "text-gold" },
+          ].map((s) => (
+            <div key={s.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+              <div className="text-2xl mb-2">{s.icon}</div>
+              <div className={`text-2xl font-bold mb-0.5 ${s.color}`}>{s.value}</div>
+              <div className="text-xs text-zinc-500">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Acciones rápidas */}
+        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">Acciones rápidas</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {[
+            { icon: "📅", title: "Nueva cita",       desc: "Agenda una cita manualmente",    href: "/dashboard/citas/nueva",   soon: false },
+            { icon: "👥", title: "Mis barberos",      desc: "Gestiona tu equipo",             href: "/dashboard/barberos",      soon: false },
+            { icon: "✂",  title: "Servicios",        desc: "Precios y duración de cortes",   href: "/dashboard/servicios",     soon: false },
+            { icon: "🕐", title: "Horarios",          desc: "Configura disponibilidad",       href: "/dashboard/horarios",      soon: true  },
+            { icon: "📈", title: "Reportes",          desc: "Ingresos y estadísticas",        href: "/dashboard/reportes",      soon: true  },
+            { icon: "⚙",  title: "Mi barbería",      desc: "Editar info y perfil",           href: "/dashboard/configuracion", soon: false },
+          ].map((a) => (
+            a.soon ? (
+              <div key={a.title} className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 opacity-50">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-2xl">{a.icon}</span>
+                  <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-500">Próximamente</span>
+                </div>
+                <h3 className="font-semibold mb-1 text-sm">{a.title}</h3>
+                <p className="text-xs text-zinc-500">{a.desc}</p>
+              </div>
+            ) : (
+              <Link key={a.title} href={a.href} className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-gold/40">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-2xl">{a.icon}</span>
+                </div>
+                <h3 className="font-semibold mb-1 text-sm group-hover:text-gold transition-colors">{a.title}</h3>
+                <p className="text-xs text-zinc-500">{a.desc}</p>
+              </Link>
+            )
+          ))}
+        </div>
+
+        {/* Info de la barbería */}
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold">Tu barbería</h2>
+            <Link href="/dashboard/configuracion" className="text-xs text-gold hover:text-gold-light transition-colors">
+              Editar →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+            <div>
+              <p className="text-zinc-500 mb-1">Nombre</p>
+              <p className="text-white font-medium">{barberia.nombre}</p>
+            </div>
+            <div>
+              <p className="text-zinc-500 mb-1">Link público</p>
+              <p className="text-gold font-mono text-xs">/b/{barberia.slug}</p>
+            </div>
+            <div>
+              <p className="text-zinc-500 mb-1">Teléfono</p>
+              <p className="text-white">{barberia.telefono || <span className="text-zinc-600">No configurado</span>}</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
