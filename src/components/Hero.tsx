@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 interface HeroProps {
   isLoggedIn?: boolean;
 }
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: (delay: number) => ({
     opacity: 1,
@@ -15,7 +15,7 @@ const fadeUp = {
   }),
 };
 
-const statVariant = {
+const statVariant: Variants = {
   hidden: { opacity: 0, scale: 0.85 },
   visible: (delay: number) => ({
     opacity: 1,

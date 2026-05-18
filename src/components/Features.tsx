@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 const features = [
   {
@@ -40,14 +40,14 @@ const features = [
   },
 ];
 
-const container = {
+const container: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.1 },
   },
 };
 
-const cardVariant = {
+const cardVariant: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
@@ -56,7 +56,7 @@ const cardVariant = {
   },
 };
 
-const headingVariant = {
+const headingVariant: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
