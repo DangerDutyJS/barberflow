@@ -123,7 +123,18 @@ export default async function DashboardPage() {
             { label: "Citas hoy",        value: citasHoy   ?? 0, icon: "📅", color: "text-blue-400"  },
             { label: "Total citas",      value: totalCitas ?? 0, icon: "📊", color: "text-purple-400" },
             { label: "Barberos activos", value: totalBarberos ?? 0, icon: "👥", color: "text-green-400"  },
-            { label: "Plan activo", value: estadoSub.esPro ? "Pro" : estadoSub.esTrial ? "Trial" : "Gratis", icon: "⭐", color: "text-gold" },
+            {
+              label: "Plan activo",
+              value: estadoSub.esPro
+                ? "Pro"
+                : estadoSub.esTrial && estadoSub.diasRestantes !== null
+                ? `${estadoSub.diasRestantes}d restantes`
+                : estadoSub.expirada && !estadoSub.esPro
+                ? "Vencido"
+                : "Trial",
+              icon: "⭐",
+              color: estadoSub.expirada && !estadoSub.esPro ? "text-red-400" : "text-gold",
+            },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
               <div className="text-2xl mb-2">{s.icon}</div>

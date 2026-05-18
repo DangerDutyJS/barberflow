@@ -136,14 +136,16 @@ export default function OnboardingPage() {
 
       if (bErr) throw bErr;
 
-      // Crear trial de 7 días
+      // Crear trial de 7 días (upsert por si la fila ya existe)
       const fechaTrial = new Date();
       fechaTrial.setDate(fechaTrial.getDate() + 7);
-      await supabase.from("suscripciones").insert({
+      const { error: subErr } = await supabase.from("suscripciones").upsert({
         barberia_id: barberia.id,
         plan: "trial",
+        estado: "activa",
         fecha_fin: fechaTrial.toISOString().split("T")[0],
-      });
+      }, { onConflict: "barberia_id" });
+      if (subErr) throw subErr;
 
       setBarberiaId(barberia.id);
       setDirection(1);
