@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import Link from "next/link";
 import SignOutButton from "@/components/SignOutButton";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
@@ -20,7 +21,9 @@ export default async function DashboardPage() {
 
   if (!barberia) redirect("/onboarding");
 
-  const { data: suscripcion } = await supabase
+  // Usamos service client para suscripciones — la RLS con subquery a barberias
+  // falla en contexto servidor; la propiedad ya está verificada arriba.
+  const { data: suscripcion } = await createServiceClient()
     .from("suscripciones")
     .select("plan, estado, fecha_fin, ciclo_facturacion, wompi_referencia, wompi_transaction_id")
     .eq("barberia_id", barberia.id)
@@ -120,21 +123,9 @@ export default async function DashboardPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Citas hoy",        value: citasHoy   ?? 0, icon: "📅", color: "text-blue-400"  },
-            { label: "Total citas",      value: totalCitas ?? 0, icon: "📊", color: "text-purple-400" },
+            { label: "Citas hoy",        value: citasHoy      ?? 0, icon: "📅", color: "text-blue-400"   },
+            { label: "Total citas",      value: totalCitas    ?? 0, icon: "📊", color: "text-purple-400" },
             { label: "Barberos activos", value: totalBarberos ?? 0, icon: "👥", color: "text-green-400"  },
-            {
-              label: "Plan activo",
-              value: estadoSub.esPro
-                ? "Pro"
-                : estadoSub.esTrial && estadoSub.diasRestantes !== null
-                ? `${estadoSub.diasRestantes}d restantes`
-                : estadoSub.expirada && !estadoSub.esPro
-                ? "Vencido"
-                : "Trial",
-              icon: "⭐",
-              color: estadoSub.expirada && !estadoSub.esPro ? "text-red-400" : "text-gold",
-            },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
               <div className="text-2xl mb-2">{s.icon}</div>
@@ -142,7 +133,55 @@ export default async function DashboardPage() {
               <div className="text-xs text-zinc-500">{s.label}</div>
             </div>
           ))}
+
+          {/* Plan activo — clickeable */}
+          <Link
+            href="/dashboard/upgrade"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-gold/40"
+          >
+            <div className="text-2xl mb-2">⭐</div>
+            <div className={`text-2xl font-bold mb-0.5 ${estadoSub.expirada && !estadoSub.esPro ? "text-red-400" : "text-gold"}`}>
+              {estadoSub.esPro
+                ? "Pro"
+                : estadoSub.esTrial && estadoSub.diasRestantes !== null
+                ? `${estadoSub.diasRestantes}d`
+                : estadoSub.expirada
+                ? "Vencido"
+                : "Trial"}
+            </div>
+            <div className="text-xs text-zinc-500">Plan activo</div>
+          </Link>
         </div>
+
+        {/* Banner upgrade (solo cuando no es Pro) */}
+        {!estadoSub.esPro && (
+          <div className={`rounded-2xl border p-5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
+            estadoSub.expirada
+              ? "border-red-500/30 bg-red-950/30"
+              : "border-gold/20 bg-gold/5"
+          }`}>
+            <div>
+              <p className={`font-semibold mb-0.5 ${estadoSub.expirada ? "text-red-300" : "text-white"}`}>
+                {estadoSub.expirada
+                  ? "Tu período de prueba ha terminado"
+                  : estadoSub.esTrial && estadoSub.diasRestantes !== null
+                  ? `Trial · ${estadoSub.diasRestantes} día${estadoSub.diasRestantes !== 1 ? "s" : ""} restante${estadoSub.diasRestantes !== 1 ? "s" : ""}`
+                  : "Estás en el plan gratuito"}
+              </p>
+              <p className="text-xs text-zinc-500">
+                {estadoSub.expirada
+                  ? "Activa un plan para seguir gestionando tu barbería sin interrupciones."
+                  : "Desbloquea barberos ilimitados, citas, reportes y tu página pública."}
+              </p>
+            </div>
+            <Link
+              href="/dashboard/upgrade"
+              className="shrink-0 rounded-xl bg-gold px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-amber-400 transition-all hover:scale-[1.02] text-center"
+            >
+              {estadoSub.expirada ? "Reactivar plan →" : "Actualizar a Pro →"}
+            </Link>
+          </div>
+        )}
 
         {/* Acciones rápidas */}
         <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">Acciones rápidas</h2>
