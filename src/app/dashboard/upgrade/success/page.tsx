@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+export const dynamic = "force-dynamic";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -8,7 +9,7 @@ import { PLANES_WOMPI, type PlanKey } from "@/lib/wompi";
 
 type Estado = "verificando" | "confirmado" | "pendiente";
 
-export default function UpgradeSuccessPage() {
+function UpgradeSuccessContent() {
   const router = useRouter();
   const params = useSearchParams();
   const planKey = params.get("plan") as PlanKey | null;
@@ -127,5 +128,13 @@ export default function UpgradeSuccessPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function UpgradeSuccessPage() {
+  return (
+    <Suspense>
+      <UpgradeSuccessContent />
+    </Suspense>
   );
 }
