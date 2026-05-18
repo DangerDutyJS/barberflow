@@ -4,7 +4,7 @@
 
 # 📌 Estado del Proyecto
 
-**Última actualización:** 2026-05-18
+**Última actualización:** 2026-05-18 (deploy Vercel activo)
 
 ## ✅ Módulos completados
 
@@ -73,7 +73,7 @@
 | Credenciales Wompi | ✅ Resuelto | Las 4 keys configuradas en `.env.local` (pub, prv, integrity, events) |
 | Trial días restantes | ✅ Resuelto | Stat card muestra `Xd restantes`. Suscripción trial creada en BD |
 | Checkout Wompi | ✅ Resuelto | Funciona en sandbox con ngrok. Tarjeta test: `4242 4242 4242 4242` |
-| Configurar webhook Wompi | ⏳ Pendiente | URL: `https://dominio/api/webhooks/wompi` (requiere deploy) |
+| Configurar webhook Wompi | ⏳ Pendiente | URL: `https://barberflow-9zre-pink.vercel.app/api/webhooks/wompi` |
 | `/dashboard/configuracion` | ⏳ Pendiente | Editar datos de la barbería |
 | `/dashboard/citas/nueva` | ⏳ Pendiente | Creación manual de citas |
 | `/b/[slug]` | ⏳ Pendiente | Página pública de agendamiento para clientes |
@@ -112,16 +112,18 @@
 | Backend/DB | Supabase (PostgreSQL) |
 | Auth | Supabase Auth (email + contraseña) |
 | Pagos | Wompi (Colombia) — pendiente credenciales |
-| Hosting | Vercel (recomendado) |
+| Hosting | Vercel — https://barberflow-9zre-pink.vercel.app |
 
 ---
 
-## ⚙️ Variables de Entorno (`.env.local`)
+## ⚙️ Variables de Entorno
 
+### Local (`.env.local`)
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://ikinfcwknskmuhjuufqy.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # Pendiente — agregar cuando se verifique cuenta Wompi
@@ -129,6 +131,19 @@ WOMPI_PUBLIC_KEY=
 WOMPI_INTEGRITY_KEY=
 WOMPI_EVENTS_KEY=
 ```
+
+### Producción (Vercel Dashboard → Settings → Environment Variables)
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://ikinfcwknskmuhjuufqy.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_SITE_URL=https://barberflow-9zre-pink.vercel.app
+NEXT_PUBLIC_APP_URL=https://barberflow-9zre-pink.vercel.app
+```
+
+### Supabase Auth → URL Configuration (requerido para OAuth)
+- **Site URL:** `https://barberflow-9zre-pink.vercel.app`
+- **Redirect URLs:** `https://barberflow-9zre-pink.vercel.app/**`
 
 ---
 
