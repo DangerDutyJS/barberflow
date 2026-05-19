@@ -28,13 +28,13 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            <Link href="#caracteristicas" className="text-sm text-ink-2 hover:text-white transition-colors">
+            <Link href="#caracteristicas" className="text-sm text-ink-2 hover:text-ink transition-colors">
               Características
             </Link>
-            <Link href="#como-funciona" className="text-sm text-ink-2 hover:text-white transition-colors">
+            <Link href="#como-funciona" className="text-sm text-ink-2 hover:text-ink transition-colors">
               Cómo funciona
             </Link>
-            <Link href="#precios" className="text-sm text-ink-2 hover:text-white transition-colors">
+            <Link href="#precios" className="text-sm text-ink-2 hover:text-ink transition-colors">
               Precios
             </Link>
           </div>
@@ -49,7 +49,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
               </Link>
             ) : (
               <>
-                <Link href="/auth/login" className="text-sm text-ink-2 hover:text-white transition-colors">
+                <Link href="/auth/login" className="text-sm text-ink-2 hover:text-ink transition-colors">
                   Iniciar sesión
                 </Link>
                 <Link
@@ -64,7 +64,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
 
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden text-ink-2 hover:text-white text-xl w-8 h-8 flex items-center justify-center"
+            className="md:hidden text-ink-2 hover:text-ink text-xl w-8 h-8 flex items-center justify-center"
           >
             {open ? "✕" : "☰"}
           </button>
@@ -78,13 +78,13 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
             transition={{ duration: 0.2 }}
             className="md:hidden border-t border-line py-4 flex flex-col gap-4"
           >
-            <Link href="#caracteristicas" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
+            <Link href="#caracteristicas" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-ink">
               Características
             </Link>
-            <Link href="#como-funciona" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
+            <Link href="#como-funciona" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-ink">
               Cómo funciona
             </Link>
-            <Link href="#precios" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
+            <Link href="#precios" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-ink">
               Precios
             </Link>
             {isLoggedIn ? (

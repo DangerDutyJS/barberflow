@@ -226,7 +226,7 @@ export default function ConfiguracionPage() {
                     onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
                     placeholder="Ej: Barbería El Estilo"
                     required
-                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                   />
                 </div>
 
@@ -237,7 +237,7 @@ export default function ConfiguracionPage() {
                     onChange={(e) => setForm((f) => ({ ...f, descripcion: e.target.value }))}
                     placeholder="Describe tu barbería, especialidades, ambiente..."
                     rows={3}
-                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
                   />
                 </div>
 
@@ -295,7 +295,7 @@ export default function ConfiguracionPage() {
                       value={form.logo_url ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, logo_url: e.target.value }))}
                       placeholder="O pega una URL de imagen..."
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-2.5 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-2.5 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>
@@ -320,7 +320,7 @@ export default function ConfiguracionPage() {
                     value={form.slug}
                     onChange={(e) => handleSlugChange(e.target.value)}
                     placeholder="mi-barberia"
-                    className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-zinc-600 outline-none"
+                    className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-ink-3 outline-none"
                   />
                 </div>
                 {slugError ? (
@@ -375,7 +375,7 @@ export default function ConfiguracionPage() {
                         value={form.departamento ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
                         placeholder="Ej: Distrito Capital"
-                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     )}
                   </div>
@@ -400,7 +400,7 @@ export default function ConfiguracionPage() {
                         value={form.ciudad ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
                         placeholder="Ej: Bogotá"
-                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     )}
                   </div>
@@ -414,7 +414,7 @@ export default function ConfiguracionPage() {
                     value={form.direccion ?? ""}
                     onChange={(e) => setForm((f) => ({ ...f, direccion: e.target.value }))}
                     placeholder="Calle 10 # 5-20"
-                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                   />
                 </div>
 
@@ -426,7 +426,7 @@ export default function ConfiguracionPage() {
                       value={form.telefono ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, telefono: e.target.value }))}
                       placeholder="+57 300 000 0000"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
@@ -436,7 +436,7 @@ export default function ConfiguracionPage() {
                       value={form.email ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                       placeholder="barberia@email.com"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>

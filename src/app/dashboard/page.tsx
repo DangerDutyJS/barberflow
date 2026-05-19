@@ -56,7 +56,7 @@ export default async function DashboardPage() {
             <Link href="/" className="flex items-center gap-2">
               <span className="text-xl">✂</span>
               <span className="text-lg font-bold tracking-tight">
-                <span className="text-white">Barber</span>
+                <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
               </span>
             </Link>
@@ -164,7 +164,7 @@ export default async function DashboardPage() {
               : "border-gold/20 bg-gold/5"
           }`}>
             <div>
-              <p className={`font-semibold mb-0.5 ${estadoSub.expirada ? "text-red-300" : "text-white"}`}>
+              <p className={`font-semibold mb-0.5 ${estadoSub.expirada ? "text-red-300" : "text-ink"}`}>
                 {estadoSub.expirada
                   ? "Tu período de prueba ha terminado"
                   : estadoSub.esTrial && estadoSub.diasRestantes !== null
@@ -229,7 +229,7 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-ink-3 mb-1">Nombre</p>
-              <p className="text-white font-medium">{barberia.nombre}</p>
+              <p className="text-ink font-medium">{barberia.nombre}</p>
             </div>
             <div>
               <p className="text-ink-3 mb-1">Link público</p>
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p className="text-ink-3 mb-1">Teléfono</p>
-              <p className="text-white">{barberia.telefono || <span className="text-ink-4">No configurado</span>}</p>
+              <p className="text-ink">{barberia.telefono || <span className="text-ink-4">No configurado</span>}</p>
             </div>
           </div>
         </div>

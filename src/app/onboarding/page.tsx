@@ -247,7 +247,7 @@ export default function OnboardingPage() {
                       value={form.nombre}
                       onChange={(e) => set("nombre", e.target.value)}
                       placeholder="Ej: Barbería El Rey"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
 
@@ -264,7 +264,7 @@ export default function OnboardingPage() {
                         value={form.slug}
                         onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
                         placeholder="barberia-el-rey"
-                        className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-zinc-600 outline-none"
+                        className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-ink-3 outline-none"
                       />
                     </div>
                     <p className="mt-1.5 text-xs text-ink-4">
@@ -346,7 +346,7 @@ export default function OnboardingPage() {
                         value={form.departamento}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
                         placeholder="Ej: Distrito Capital"
-                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     </div>
                   )}
@@ -374,7 +374,7 @@ export default function OnboardingPage() {
                         value={form.ciudad}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
                         placeholder="Ej: Bogotá"
-                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     </div>
                   )}
@@ -387,7 +387,7 @@ export default function OnboardingPage() {
                       value={form.direccion}
                       onChange={(e) => set("direccion", e.target.value)}
                       placeholder="Calle 10 # 5-20"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
@@ -397,7 +397,7 @@ export default function OnboardingPage() {
                       value={form.telefono}
                       onChange={(e) => set("telefono", e.target.value)}
                       placeholder="+1 234 567 8900"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
@@ -407,7 +407,7 @@ export default function OnboardingPage() {
                       value={form.email}
                       onChange={(e) => set("email", e.target.value)}
                       placeholder="contacto@mibarberia.com"
-                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>

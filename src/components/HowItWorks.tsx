@@ -45,7 +45,7 @@ export default function HowItWorks() {
         >
           <span className="text-sm font-semibold text-gold uppercase tracking-widest">Proceso</span>
           <h2 className="mt-3 text-3xl sm:text-4xl font-bold">Empieza en 3 pasos</h2>
-          <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+          <p className="mt-4 text-ink-2 max-w-xl mx-auto">
             Sin configuraciones complicadas ni conocimientos técnicos. Estarás listo para recibir citas en minutos.
           </p>
         </motion.div>
@@ -69,7 +69,7 @@ export default function HowItWorks() {
                 <span className="text-lg font-bold text-gold">{step.number}</span>
               </div>
               <h3 className="mb-3 text-xl font-semibold">{step.title}</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">{step.description}</p>
+              <p className="text-ink-2 text-sm leading-relaxed max-w-xs">{step.description}</p>
             </motion.div>
           ))}
         </motion.div>

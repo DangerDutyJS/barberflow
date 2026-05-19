@@ -93,7 +93,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Ej: Carlos Mendoza"
               autoFocus
-              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 
@@ -106,7 +106,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
               value={fotoUrl}
               onChange={(e) => setFotoUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 

@@ -60,13 +60,13 @@ function UpgradeSuccessContent() {
   }, [ref]);
 
   return (
-    <div className="min-h-screen bg-base text-white flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-base text-ink flex flex-col items-center justify-center px-4">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,168,83,0.07),transparent)] pointer-events-none" />
 
       <Link href="/" className="flex items-center gap-2 mb-10">
         <span className="text-2xl">✂</span>
         <span className="text-2xl font-bold">
-          <span className="text-white">Barber</span>
+          <span className="text-ink">Barber</span>
           <span className="text-gold">Flow</span>
         </span>
       </Link>
@@ -120,7 +120,7 @@ function UpgradeSuccessContent() {
             </p>
             <Link
               href="/dashboard"
-              className="block w-full rounded-xl bg-chip py-3 text-sm font-semibold text-white hover:bg-zinc-700 transition-colors"
+              className="block w-full rounded-xl bg-chip py-3 text-sm font-semibold text-ink hover:bg-chip transition-colors"
             >
               Ir al dashboard
             </Link>

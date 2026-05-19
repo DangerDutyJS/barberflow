@@ -87,7 +87,7 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
             <input
               type="text" value={form.nombre} onChange={(e) => set("nombre", e.target.value)}
               placeholder="Ej: Corte clásico" autoFocus
-              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 
@@ -96,7 +96,7 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
             <textarea
               value={form.descripcion} onChange={(e) => set("descripcion", e.target.value)}
               placeholder="Describe el servicio brevemente..." rows={2}
-              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
             />
           </div>
 
@@ -132,7 +132,7 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
                 type="number" value={form.precio}
                 onChange={(e) => set("precio", Math.max(0, parseInt(e.target.value) || 0))}
                 min={0} placeholder="0"
-                className="w-full rounded-xl border border-line-2 bg-chip pl-8 pr-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-xl border border-line-2 bg-chip pl-8 pr-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
               />
             </div>
             {form.precio > 0 && <p className="mt-1 text-xs text-ink-4">{formatPrecio(form.precio)} COP</p>}
@@ -408,7 +408,7 @@ export default function ServiciosPage() {
                     <input
                       type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
                       placeholder="Buscar servicio..."
-                      className="w-full rounded-xl border border-line bg-card pl-9 pr-4 py-2.5 text-sm text-ink placeholder-zinc-600 outline-none focus:border-zinc-600 transition-colors"
+                      className="w-full rounded-xl border border-line bg-card pl-9 pr-4 py-2.5 text-sm text-ink placeholder-ink-3 outline-none focus:border-zinc-600 transition-colors"
                     />
                     {busqueda && (
                       <button onClick={() => setBusqueda("")}
