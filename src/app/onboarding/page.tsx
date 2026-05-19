@@ -129,6 +129,14 @@ export default function OnboardingPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No autenticado");
 
+      // Si ya tiene barbería, ir directo al dashboard
+      const { data: existing } = await supabase
+        .from("barberias")
+        .select("id")
+        .eq("owner_id", user.id)
+        .maybeSingle();
+      if (existing) { router.push("/dashboard"); return; }
+
       const { data: barberia, error: bErr } = await supabase
         .from("barberias")
         .insert({
