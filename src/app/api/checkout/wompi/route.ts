@@ -37,11 +37,14 @@ export async function POST(request: NextRequest) {
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const redirectUrl = `${appUrl}/dashboard/upgrade/success?ref=${reference}&plan=${body.planKey}`;
   const checkoutUrl = construirUrlCheckout({
     reference,
     amountCents: plan.centavos,
-    redirectUrl: `${appUrl}/dashboard/upgrade/success?ref=${reference}&plan=${body.planKey}`,
+    redirectUrl,
   });
 
-  return NextResponse.json({ checkoutUrl });
+  console.log("[wompi-checkout]", { appUrl, redirectUrl, checkoutUrl });
+
+  return NextResponse.json({ checkoutUrl, _debug: { appUrl, redirectUrl } });
 }
