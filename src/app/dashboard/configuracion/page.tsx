@@ -1,6 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,6 +13,7 @@ type FormData = Pick<Barberia, "nombre" | "slug" | "descripcion" | "direccion" |
 export default function ConfiguracionPage() {
   const router = useRouter();
   const supabase = createClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [barberia, setBarberia] = useState<Barberia | null>(null);
   const [form, setForm] = useState<FormData>({
@@ -22,6 +23,7 @@ export default function ConfiguracionPage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [toast, setToast] = useState<{ msg: string; tipo: "ok" | "error" } | null>(null);
   const [slugError, setSlugError] = useState("");
 
@@ -70,6 +72,40 @@ export default function ConfiguracionPage() {
       setSlugError("Máximo 50 caracteres.");
     } else {
       setSlugError("");
+    }
+  }
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !barberia) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      mostrarToast("El archivo no puede superar 2 MB.", "error");
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+      const path = `${barberia.id}/logo.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("logos")
+        .upload(path, file, { upsert: true, contentType: file.type });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage.from("logos").getPublicUrl(path);
+
+      // Añadir cache-bust para forzar recarga de la imagen
+      const urlConBust = `${publicUrl}?t=${Date.now()}`;
+      setForm((f) => ({ ...f, logo_url: urlConBust }));
+      mostrarToast("Logo subido correctamente.");
+    } catch {
+      mostrarToast("Error al subir el logo. Intenta de nuevo.", "error");
+    } finally {
+      setUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }
 
@@ -198,26 +234,63 @@ export default function ConfiguracionPage() {
                   />
                 </div>
 
+                {/* Logo upload */}
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">URL del logo</label>
-                  <input
-                    type="url"
-                    value={form.logo_url ?? ""}
-                    onChange={(e) => setForm((f) => ({ ...f, logo_url: e.target.value }))}
-                    placeholder="https://..."
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-                  />
-                  {form.logo_url && (
-                    <div className="mt-2 flex items-center gap-3">
-                      <img
-                        src={form.logo_url}
-                        alt="Logo preview"
-                        onError={(e) => (e.currentTarget.style.display = "none")}
-                        className="w-12 h-12 rounded-xl object-cover border border-zinc-700"
-                      />
-                      <span className="text-xs text-zinc-500">Vista previa</span>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Logo</label>
+                  <div className="flex items-center gap-4">
+                    {/* Preview */}
+                    <div className="w-16 h-16 rounded-xl border border-zinc-700 bg-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
+                      {form.logo_url ? (
+                        <img
+                          src={form.logo_url}
+                          alt="Logo"
+                          onError={(e) => (e.currentTarget.style.display = "none")}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-2xl">✂</span>
+                      )}
                     </div>
-                  )}
+
+                    <div className="flex flex-col gap-2 flex-1">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                        id="logo-upload"
+                      />
+                      <label
+                        htmlFor="logo-upload"
+                        className={`flex items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-gold hover:text-gold transition-colors cursor-pointer ${uploadingLogo ? "opacity-50 pointer-events-none" : ""}`}
+                      >
+                        {uploadingLogo ? (
+                          <>
+                            <span className="h-4 w-4 rounded-full border-2 border-zinc-600 border-t-gold animate-spin" />
+                            Subiendo...
+                          </>
+                        ) : (
+                          <>
+                            <span>↑</span>
+                            Subir imagen
+                          </>
+                        )}
+                      </label>
+                      <p className="text-xs text-zinc-600">JPG, PNG, WebP · Máx. 2 MB</p>
+                    </div>
+                  </div>
+
+                  {/* URL manual como alternativa */}
+                  <div className="mt-3">
+                    <input
+                      type="url"
+                      value={form.logo_url ?? ""}
+                      onChange={(e) => setForm((f) => ({ ...f, logo_url: e.target.value }))}
+                      placeholder="O pega una URL de imagen..."
+                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    />
+                  </div>
                 </div>
               </div>
             </section>
@@ -227,7 +300,6 @@ export default function ConfiguracionPage() {
               <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
                 Link público
               </h2>
-
               <div>
                 <label className="block text-sm text-zinc-400 mb-1.5">
                   URL de agendamiento <span className="text-gold">*</span>
@@ -261,7 +333,6 @@ export default function ConfiguracionPage() {
                 Contacto y ubicación
               </h2>
               <div className="flex flex-col gap-4">
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1.5">Teléfono / WhatsApp</label>
@@ -273,7 +344,6 @@ export default function ConfiguracionPage() {
                       className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1.5">Email de contacto</label>
                     <input
@@ -285,7 +355,6 @@ export default function ConfiguracionPage() {
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
                   <input
@@ -309,7 +378,7 @@ export default function ConfiguracionPage() {
               </Link>
               <button
                 type="submit"
-                disabled={saving || !!slugError}
+                disabled={saving || !!slugError || uploadingLogo}
                 className="rounded-xl bg-gold px-6 py-3 text-sm font-semibold text-zinc-950 hover:bg-amber-400 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:scale-100"
               >
                 {saving ? (
