@@ -137,6 +137,13 @@ export default function OnboardingPage() {
         .maybeSingle();
       if (existing) { router.push("/dashboard"); return; }
 
+      // Garantizar que el perfil existe antes de insertar la barbería
+      await supabase.from("profiles").upsert({
+        id: user.id,
+        full_name: user.user_metadata?.full_name || null,
+        role: "admin",
+      }, { onConflict: "id" });
+
       const { data: barberia, error: bErr } = await supabase
         .from("barberias")
         .insert({
