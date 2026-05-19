@@ -36,15 +36,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const redirectUrl = `${appUrl}/dashboard/upgrade/success?ref=${reference}&plan=${body.planKey}`;
+  const appUrl = new URL(request.url).origin;
   const checkoutUrl = construirUrlCheckout({
     reference,
     amountCents: plan.centavos,
-    redirectUrl,
+    redirectUrl: `${appUrl}/dashboard/upgrade/success?ref=${reference}&plan=${body.planKey}`,
   });
 
-  console.log("[wompi-checkout]", { appUrl, redirectUrl, checkoutUrl });
-
-  return NextResponse.json({ checkoutUrl, _debug: { appUrl, redirectUrl } });
+  return NextResponse.json({ checkoutUrl });
 }

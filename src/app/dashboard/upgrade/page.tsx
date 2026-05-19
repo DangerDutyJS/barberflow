@@ -158,7 +158,7 @@ export default function UpgradePage() {
         throw new Error(data.error || "No se pudo iniciar el pago");
       }
 
-      window.open(data.checkoutUrl, "_blank");
+      window.location.href = data.checkoutUrl;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error al procesar. Intenta de nuevo.");
       setLoading(false);
