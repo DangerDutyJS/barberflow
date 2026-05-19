@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const geist = Geist({
   variable: "--font-geist",
@@ -25,6 +26,8 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${geist.variable} h-full`}>
       <head>
+        {/* Apply saved theme before paint to avoid flash */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('bf-theme');if(t==='light')document.documentElement.classList.add('light');}catch(e){}})()` }} />
         <meta name="theme-color" content="#09090b" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +35,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="BarberFlow" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="min-h-full bg-zinc-950 text-white antialiased">
-        {children}
+      <body className="min-h-full antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

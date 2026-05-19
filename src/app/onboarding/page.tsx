@@ -193,7 +193,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-base flex flex-col items-center justify-center px-4 py-12">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,168,83,0.07),transparent)] pointer-events-none" />
 
       <motion.div
@@ -206,7 +206,7 @@ export default function OnboardingPage() {
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
           <span className="text-2xl">✂</span>
           <span className="text-2xl font-bold tracking-tight">
-            <span className="text-white">Barber</span>
+            <span className="text-ink">Barber</span>
             <span className="text-gold">Flow</span>
           </span>
         </Link>
@@ -215,7 +215,7 @@ export default function OnboardingPage() {
         <StepIndicator current={step} total={3} />
 
         {/* Card */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden">
+        <div className="rounded-2xl border border-line bg-card overflow-hidden">
           <AnimatePresence mode="wait" custom={direction}>
             {/* ── PASO 0: Nombre y slug ── */}
             {step === 0 && (
@@ -233,13 +233,13 @@ export default function OnboardingPage() {
                 <h1 className="text-2xl font-bold mb-1">
                   {userName ? `Hola, ${userName} 👋` : "Bienvenido 👋"}
                 </h1>
-                <p className="text-zinc-400 text-sm mb-7">
+                <p className="text-ink-2 text-sm mb-7">
                   Vamos a configurar tu barbería en menos de 2 minutos.
                 </p>
 
                 <div className="flex flex-col gap-5">
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">
+                    <label className="block text-sm text-ink-2 mb-1.5">
                       Nombre de tu barbería <span className="text-gold">*</span>
                     </label>
                     <input
@@ -247,16 +247,16 @@ export default function OnboardingPage() {
                       value={form.nombre}
                       onChange={(e) => set("nombre", e.target.value)}
                       placeholder="Ej: Barbería El Rey"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">
+                    <label className="block text-sm text-ink-2 mb-1.5">
                       URL personalizada <span className="text-gold">*</span>
                     </label>
-                    <div className={`flex rounded-xl border ${slugTaken ? "border-red-500" : "border-zinc-700 focus-within:border-gold"} bg-zinc-800 overflow-hidden transition-colors`}>
-                      <span className="flex items-center px-3 text-xs text-zinc-500 border-r border-zinc-700 whitespace-nowrap">
+                    <div className={`flex rounded-xl border ${slugTaken ? "border-red-500" : "border-line-2 focus-within:border-gold"} bg-chip overflow-hidden transition-colors`}>
+                      <span className="flex items-center px-3 text-xs text-ink-3 border-r border-line-2 whitespace-nowrap">
                         /b/
                       </span>
                       <input
@@ -264,11 +264,11 @@ export default function OnboardingPage() {
                         value={form.slug}
                         onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
                         placeholder="barberia-el-rey"
-                        className="flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder-zinc-600 outline-none"
+                        className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-zinc-600 outline-none"
                       />
                     </div>
-                    <p className="mt-1.5 text-xs text-zinc-600">
-                      Tu link público: <span className="text-zinc-400">barberflow.com/b/{form.slug || "tu-barberia"}</span>
+                    <p className="mt-1.5 text-xs text-ink-4">
+                      Tu link público: <span className="text-ink-2">barberflow.com/b/{form.slug || "tu-barberia"}</span>
                     </p>
                   </div>
                 </div>
@@ -304,18 +304,18 @@ export default function OnboardingPage() {
               >
                 <p className="text-sm text-gold font-semibold uppercase tracking-widest mb-2">Paso 2 de 2</p>
                 <h1 className="text-2xl font-bold mb-1">Contacto y ubicación</h1>
-                <p className="text-zinc-400 text-sm mb-7">
+                <p className="text-ink-2 text-sm mb-7">
                   Todo es opcional. Puedes completarlo después desde el dashboard.
                 </p>
 
                 <div className="flex flex-col gap-4">
                   {/* País */}
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">País</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">País</label>
                     <select
                       value={form.pais}
                       onChange={(e) => setForm((f) => ({ ...f, pais: e.target.value, departamento: "", ciudad: "" }))}
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     >
                       {PAISES.map((p) => (
                         <option key={p.codigo} value={p.codigo}>{p.nombre}</option>
@@ -326,11 +326,11 @@ export default function OnboardingPage() {
                   {/* Departamento */}
                   {getDepartamentos(form.pais).length > 0 ? (
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1.5">Departamento</label>
+                      <label className="block text-sm text-ink-2 mb-1.5">Departamento</label>
                       <select
                         value={form.departamento}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       >
                         <option value="">Selecciona un departamento</option>
                         {getDepartamentos(form.pais).map((d) => (
@@ -340,13 +340,13 @@ export default function OnboardingPage() {
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1.5">Departamento / Estado</label>
+                      <label className="block text-sm text-ink-2 mb-1.5">Departamento / Estado</label>
                       <input
                         type="text"
                         value={form.departamento}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
                         placeholder="Ej: Distrito Capital"
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     </div>
                   )}
@@ -354,11 +354,11 @@ export default function OnboardingPage() {
                   {/* Ciudad */}
                   {getCiudades(form.pais, form.departamento).length > 0 ? (
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                      <label className="block text-sm text-ink-2 mb-1.5">Ciudad</label>
                       <select
                         value={form.ciudad}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       >
                         <option value="">Selecciona una ciudad</option>
                         {getCiudades(form.pais, form.departamento).map((c) => (
@@ -368,46 +368,46 @@ export default function OnboardingPage() {
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                      <label className="block text-sm text-ink-2 mb-1.5">Ciudad</label>
                       <input
                         type="text"
                         value={form.ciudad}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
                         placeholder="Ej: Bogotá"
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     </div>
                   )}
 
                   {/* Dirección */}
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Dirección</label>
                     <input
                       type="text"
                       value={form.direccion}
                       onChange={(e) => set("direccion", e.target.value)}
                       placeholder="Calle 10 # 5-20"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Teléfono</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Teléfono</label>
                     <input
                       type="tel"
                       value={form.telefono}
                       onChange={(e) => set("telefono", e.target.value)}
                       placeholder="+1 234 567 8900"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Email de contacto</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Email de contacto</label>
                     <input
                       type="email"
                       value={form.email}
                       onChange={(e) => set("email", e.target.value)}
                       placeholder="contacto@mibarberia.com"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>
@@ -422,7 +422,7 @@ export default function OnboardingPage() {
                 <div className="mt-6 flex gap-3">
                   <button
                     onClick={prevStep}
-                    className="flex-1 rounded-xl border border-zinc-700 py-3 text-sm font-semibold text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors"
+                    className="flex-1 rounded-xl border border-line-2 py-3 text-sm font-semibold text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors"
                   >
                     ← Atrás
                   </button>
@@ -460,11 +460,11 @@ export default function OnboardingPage() {
 
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                   <h1 className="text-2xl font-bold mb-2">¡Todo listo!</h1>
-                  <p className="text-zinc-400 text-sm mb-2">
+                  <p className="text-ink-2 text-sm mb-2">
                     <span className="text-gold font-semibold">{form.nombre}</span> ha sido creada exitosamente.
                   </p>
-                  <p className="text-zinc-600 text-xs mb-8">
-                    Tu link público: <span className="text-zinc-500">barberflow.com/b/{form.slug}</span>
+                  <p className="text-ink-4 text-xs mb-8">
+                    Tu link público: <span className="text-ink-3">barberflow.com/b/{form.slug}</span>
                   </p>
 
                   <div className="flex flex-col gap-3">
@@ -476,7 +476,7 @@ export default function OnboardingPage() {
                     </button>
                     <button
                       onClick={() => router.push("/dashboard/barberos")}
-                      className="w-full rounded-xl border border-zinc-700 py-3 text-sm font-semibold text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors"
+                      className="w-full rounded-xl border border-line-2 py-3 text-sm font-semibold text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors"
                     >
                       Agregar mis barberos
                     </button>

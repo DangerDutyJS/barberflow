@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import Link from "next/link";
 import SignOutButton from "@/components/SignOutButton";
+import ThemeToggle from "@/components/ThemeToggle";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
 import type { Suscripcion } from "@/types/database";
 
@@ -47,9 +48,9 @@ export default async function DashboardPage() {
   const avatar = user.user_metadata?.avatar_url;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-base text-ink">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
@@ -59,21 +60,22 @@ export default async function DashboardPage() {
                 <span className="text-gold">Flow</span>
               </span>
             </Link>
-            <span className="hidden sm:block text-zinc-700">|</span>
-            <span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span>
+            <span className="hidden sm:block text-line-2">|</span>
+            <span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               {avatar ? (
-                <img src={avatar} alt={nombre} className="w-8 h-8 rounded-full border border-zinc-700" />
+                <img src={avatar} alt={nombre} className="w-8 h-8 rounded-full border border-line-2" />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
                   {nombre[0].toUpperCase()}
                 </div>
               )}
-              <span className="text-sm text-zinc-300 hidden sm:block">{nombre}</span>
+              <span className="text-sm text-ink-2 hidden sm:block">{nombre}</span>
             </div>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>
@@ -86,7 +88,7 @@ export default async function DashboardPage() {
             ? "border-red-900/50 bg-red-950/60 text-red-300"
             : estadoSub.diasRestantes !== null && estadoSub.diasRestantes <= 2
             ? "border-amber-900/50 bg-amber-950/60 text-amber-300"
-            : "border-gold/20 bg-gold/5 text-zinc-300"
+            : "border-gold/20 bg-gold/5 text-ink-2"
         }`}>
           {estadoSub.expirada ? (
             <>
@@ -116,8 +118,8 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-bold mb-1">
             Bienvenido, <span className="text-gold">{nombre.split(" ")[0]}</span> 👋
           </h1>
-          <p className="text-zinc-500 text-sm">
-            Panel de control · <span className="text-zinc-400">{barberia.nombre}</span>
+          <p className="text-ink-3 text-sm">
+            Panel de control · <span className="text-ink-2">{barberia.nombre}</span>
           </p>
         </div>
 
@@ -128,17 +130,17 @@ export default async function DashboardPage() {
             { label: "Total citas",      value: totalCitas    ?? 0, icon: "📊", color: "text-purple-400" },
             { label: "Barberos activos", value: totalBarberos ?? 0, icon: "👥", color: "text-green-400"  },
           ].map((s) => (
-            <div key={s.label} className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <div key={s.label} className="rounded-2xl border border-line bg-card p-5">
               <div className="text-2xl mb-2">{s.icon}</div>
               <div className={`text-2xl font-bold mb-0.5 ${s.color}`}>{s.value}</div>
-              <div className="text-xs text-zinc-500">{s.label}</div>
+              <div className="text-xs text-ink-3">{s.label}</div>
             </div>
           ))}
 
           {/* Plan activo — clickeable */}
           <Link
             href="/dashboard/upgrade"
-            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-gold/40"
+            className="group rounded-2xl border border-line bg-card p-5 transition-all hover:border-gold/40"
           >
             <div className="text-2xl mb-2">⭐</div>
             <div className={`text-2xl font-bold mb-0.5 ${estadoSub.expirada && !estadoSub.esPro ? "text-red-400" : "text-gold"}`}>
@@ -150,7 +152,7 @@ export default async function DashboardPage() {
                 ? "Vencido"
                 : "Trial"}
             </div>
-            <div className="text-xs text-zinc-500">Plan activo</div>
+            <div className="text-xs text-ink-3">Plan activo</div>
           </Link>
         </div>
 
@@ -169,7 +171,7 @@ export default async function DashboardPage() {
                   ? `Trial · ${estadoSub.diasRestantes} día${estadoSub.diasRestantes !== 1 ? "s" : ""} restante${estadoSub.diasRestantes !== 1 ? "s" : ""}`
                   : "Estás en el plan gratuito"}
               </p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-ink-3">
                 {estadoSub.expirada
                   ? "Activa un plan para seguir gestionando tu barbería sin interrupciones."
                   : "Desbloquea barberos ilimitados, citas, reportes y tu página pública."}
@@ -185,7 +187,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Acciones rápidas */}
-        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-4">Acciones rápidas</h2>
+        <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-4">Acciones rápidas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {[
             { icon: "📅", title: "Nueva cita",       desc: "Agenda una cita manualmente",    href: "/dashboard/citas/nueva",   soon: false },
@@ -196,28 +198,28 @@ export default async function DashboardPage() {
             { icon: "⚙",  title: "Mi barbería",      desc: "Editar info y perfil",           href: "/dashboard/configuracion", soon: false },
           ].map((a) => (
             a.soon ? (
-              <div key={a.title} className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 opacity-50">
+              <div key={a.title} className="group rounded-2xl border border-line bg-card p-5 opacity-50">
                 <div className="flex items-start justify-between mb-3">
                   <span className="text-2xl">{a.icon}</span>
-                  <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-xs text-zinc-500">Próximamente</span>
+                  <span className="rounded-full bg-chip px-2 py-0.5 text-xs text-ink-3">Próximamente</span>
                 </div>
                 <h3 className="font-semibold mb-1 text-sm">{a.title}</h3>
-                <p className="text-xs text-zinc-500">{a.desc}</p>
+                <p className="text-xs text-ink-3">{a.desc}</p>
               </div>
             ) : (
-              <Link key={a.title} href={a.href} className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-gold/40">
+              <Link key={a.title} href={a.href} className="group rounded-2xl border border-line bg-card p-5 transition-all hover:border-gold/40">
                 <div className="flex items-start justify-between mb-3">
                   <span className="text-2xl">{a.icon}</span>
                 </div>
                 <h3 className="font-semibold mb-1 text-sm group-hover:text-gold transition-colors">{a.title}</h3>
-                <p className="text-xs text-zinc-500">{a.desc}</p>
+                <p className="text-xs text-ink-3">{a.desc}</p>
               </Link>
             )
           ))}
         </div>
 
         {/* Info de la barbería */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+        <div className="rounded-2xl border border-line bg-card p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold">Tu barbería</h2>
             <Link href="/dashboard/configuracion" className="text-xs text-gold hover:text-gold-light transition-colors">
@@ -226,16 +228,16 @@ export default async function DashboardPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-zinc-500 mb-1">Nombre</p>
+              <p className="text-ink-3 mb-1">Nombre</p>
               <p className="text-white font-medium">{barberia.nombre}</p>
             </div>
             <div>
-              <p className="text-zinc-500 mb-1">Link público</p>
+              <p className="text-ink-3 mb-1">Link público</p>
               <p className="text-gold font-mono text-xs">/b/{barberia.slug}</p>
             </div>
             <div>
-              <p className="text-zinc-500 mb-1">Teléfono</p>
-              <p className="text-white">{barberia.telefono || <span className="text-zinc-600">No configurado</span>}</p>
+              <p className="text-ink-3 mb-1">Teléfono</p>
+              <p className="text-white">{barberia.telefono || <span className="text-ink-4">No configurado</span>}</p>
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ function Avatar({ nombre, fotoUrl, size = 16 }: { nombre: string; fotoUrl: strin
       <img
         src={fotoUrl}
         alt={nombre}
-        className={`w-${size} h-${size} rounded-full object-cover border-2 border-zinc-700`}
+        className={`w-${size} h-${size} rounded-full object-cover border-2 border-line-2`}
       />
     );
   }
@@ -68,7 +68,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6"
+        className="w-full max-w-md rounded-2xl border border-line bg-card p-6"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold">
@@ -76,7 +76,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
           </h2>
           <button
             onClick={onClose}
-            className="text-zinc-500 hover:text-white transition-colors text-xl leading-none"
+            className="text-ink-3 hover:text-ink transition-colors text-xl leading-none"
           >
             ×
           </button>
@@ -84,7 +84,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">
+            <label className="block text-sm text-ink-2 mb-1.5">
               Nombre <span className="text-gold">*</span>
             </label>
             <input
@@ -93,27 +93,27 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
               onChange={(e) => setNombre(e.target.value)}
               placeholder="Ej: Carlos Mendoza"
               autoFocus
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">
-              URL de foto <span className="text-zinc-600 text-xs">(opcional)</span>
+            <label className="block text-sm text-ink-2 mb-1.5">
+              URL de foto <span className="text-ink-4 text-xs">(opcional)</span>
             </label>
             <input
               type="url"
               value={fotoUrl}
               onChange={(e) => setFotoUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 
           {nombre && (
-            <div className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-800/50 p-3">
+            <div className="flex items-center gap-3 rounded-xl border border-line bg-chip/50 p-3">
               <Avatar nombre={nombre} fotoUrl={fotoUrl || null} size={10} />
-              <span className="text-sm text-zinc-300">{nombre}</span>
+              <span className="text-sm text-ink-2">{nombre}</span>
             </div>
           )}
 
@@ -131,7 +131,7 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-xl border border-zinc-700 py-3 text-sm font-semibold text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors"
+              className="flex-1 rounded-xl border border-line-2 py-3 text-sm font-semibold text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors"
             >
               Cancelar
             </button>
@@ -170,20 +170,20 @@ function BarberoCard({ barbero, onEdit, onToggle, onDelete, confirmDeleteId, set
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-2xl border bg-zinc-900 p-5 flex flex-col items-center text-center transition-colors ${
-        barbero.activo ? "border-zinc-800" : "border-zinc-800/50 opacity-60"
+      className={`rounded-2xl border bg-card p-5 flex flex-col items-center text-center transition-colors ${
+        barbero.activo ? "border-line" : "border-line/50 opacity-60"
       }`}
     >
       <div className="mb-3">
         <Avatar nombre={barbero.nombre} fotoUrl={barbero.foto_url} size={16} />
       </div>
 
-      <h3 className="font-semibold text-white mb-1 truncate w-full">{barbero.nombre}</h3>
+      <h3 className="font-semibold text-ink mb-1 truncate w-full">{barbero.nombre}</h3>
 
       <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium mb-4 ${
         barbero.activo
           ? "bg-green-500/10 text-green-400 border border-green-500/20"
-          : "bg-zinc-800 text-zinc-500 border border-zinc-700"
+          : "bg-chip text-ink-3 border border-line-2"
       }`}>
         <span className={`w-1.5 h-1.5 rounded-full ${barbero.activo ? "bg-green-400" : "bg-zinc-600"}`} />
         {barbero.activo ? "Activo" : "Inactivo"}
@@ -192,7 +192,7 @@ function BarberoCard({ barbero, onEdit, onToggle, onDelete, confirmDeleteId, set
       <div className="w-full flex flex-col gap-2">
         <button
           onClick={() => onEdit(barbero)}
-          className="w-full rounded-xl border border-zinc-700 py-2 text-xs font-semibold text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors"
+          className="w-full rounded-xl border border-line-2 py-2 text-xs font-semibold text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors"
         >
           Editar
         </button>
@@ -201,7 +201,7 @@ function BarberoCard({ barbero, onEdit, onToggle, onDelete, confirmDeleteId, set
           onClick={() => onToggle(barbero.id, barbero.activo)}
           className={`w-full rounded-xl border py-2 text-xs font-semibold transition-colors ${
             barbero.activo
-              ? "border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
+              ? "border-line-2 text-ink-2 hover:border-zinc-500 hover:text-ink"
               : "border-gold/30 text-gold hover:border-gold hover:bg-gold/5"
           }`}
         >
@@ -212,7 +212,7 @@ function BarberoCard({ barbero, onEdit, onToggle, onDelete, confirmDeleteId, set
           <div className="flex gap-1.5">
             <button
               onClick={() => setConfirmDeleteId(null)}
-              className="flex-1 rounded-xl border border-zinc-700 py-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
+              className="flex-1 rounded-xl border border-line-2 py-2 text-xs font-semibold text-ink-2 hover:text-ink transition-colors"
             >
               Cancelar
             </button>
@@ -226,7 +226,7 @@ function BarberoCard({ barbero, onEdit, onToggle, onDelete, confirmDeleteId, set
         ) : (
           <button
             onClick={() => setConfirmDeleteId(barbero.id)}
-            className="w-full rounded-xl border border-zinc-800 py-2 text-xs font-semibold text-zinc-600 hover:border-red-500/40 hover:text-red-400 transition-colors"
+            className="w-full rounded-xl border border-line py-2 text-xs font-semibold text-ink-4 hover:border-red-500/40 hover:text-red-400 transition-colors"
           >
             Eliminar
           </button>
@@ -347,35 +347,35 @@ export default function BarberosPage() {
   const nombre = userName;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-base text-ink">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <span className="text-xl">✂</span>
               <span className="text-lg font-bold tracking-tight">
-                <span className="text-white">Barber</span>
+                <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
               </span>
             </Link>
             {barberia && (
               <>
-                <span className="hidden sm:block text-zinc-700">|</span>
-                <span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span>
+                <span className="hidden sm:block text-line-2">|</span>
+                <span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span>
               </>
             )}
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={nombre} className="w-8 h-8 rounded-full border border-zinc-700" />
+                <img src={avatarUrl} alt={nombre} className="w-8 h-8 rounded-full border border-line-2" />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
                   {nombre[0]?.toUpperCase()}
                 </div>
               )}
-              <span className="text-sm text-zinc-300 hidden sm:block">{nombre}</span>
+              <span className="text-sm text-ink-2 hidden sm:block">{nombre}</span>
             </div>
             <SignOutButton />
           </div>
@@ -386,10 +386,10 @@ export default function BarberosPage() {
         {/* Breadcrumb + título */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 text-sm text-zinc-500 mb-1">
-              <Link href="/dashboard" className="hover:text-zinc-300 transition-colors">Dashboard</Link>
+            <div className="flex items-center gap-2 text-sm text-ink-3 mb-1">
+              <Link href="/dashboard" className="hover:text-ink-2 transition-colors">Dashboard</Link>
               <span>/</span>
-              <span className="text-zinc-300">Mis barberos</span>
+              <span className="text-ink-2">Mis barberos</span>
             </div>
             <h1 className="text-2xl font-bold">Mis barberos</h1>
           </div>
@@ -406,7 +406,7 @@ export default function BarberosPage() {
         {/* Contenido */}
         {loadingData ? (
           <div className="flex justify-center py-20">
-            <div className="h-8 w-8 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+            <div className="h-8 w-8 rounded-full border-2 border-line-2 border-t-gold animate-spin" />
           </div>
         ) : barberos.length === 0 ? (
           <motion.div
@@ -416,7 +416,7 @@ export default function BarberosPage() {
           >
             <div className="text-5xl mb-4">✂</div>
             <h3 className="text-lg font-semibold mb-2">Sin barberos aún</h3>
-            <p className="text-zinc-500 text-sm mb-6 max-w-xs">
+            <p className="text-ink-3 text-sm mb-6 max-w-xs">
               Agrega a tu equipo para empezar a gestionar citas y asignar servicios.
             </p>
             <button
@@ -449,7 +449,7 @@ export default function BarberosPage() {
 
         {/* Contador */}
         {barberos.length > 0 && (
-          <p className="mt-6 text-xs text-zinc-600">
+          <p className="mt-6 text-xs text-ink-4">
             {barberos.filter((b) => b.activo).length} activo{barberos.filter((b) => b.activo).length !== 1 ? "s" : ""} ·{" "}
             {barberos.length} en total
           </p>
@@ -475,7 +475,7 @@ export default function BarberosPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium shadow-xl"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border border-line-2 bg-card px-5 py-3 text-sm font-medium shadow-xl"
           >
             {toast}
           </motion.div>

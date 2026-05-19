@@ -15,26 +15,26 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
       initial={{ y: -64, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-md"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-line/60 bg-base/80 backdrop-blur-md"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl select-none">✂</span>
             <span className="text-xl font-bold tracking-tight">
-              <span className="text-white">Barber</span>
+              <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>
             </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            <Link href="#caracteristicas" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link href="#caracteristicas" className="text-sm text-ink-2 hover:text-white transition-colors">
               Características
             </Link>
-            <Link href="#como-funciona" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link href="#como-funciona" className="text-sm text-ink-2 hover:text-white transition-colors">
               Cómo funciona
             </Link>
-            <Link href="#precios" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link href="#precios" className="text-sm text-ink-2 hover:text-white transition-colors">
               Precios
             </Link>
           </div>
@@ -49,7 +49,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
               </Link>
             ) : (
               <>
-                <Link href="/auth/login" className="text-sm text-zinc-400 hover:text-white transition-colors">
+                <Link href="/auth/login" className="text-sm text-ink-2 hover:text-white transition-colors">
                   Iniciar sesión
                 </Link>
                 <Link
@@ -64,7 +64,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
 
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden text-zinc-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center"
+            className="md:hidden text-ink-2 hover:text-white text-xl w-8 h-8 flex items-center justify-center"
           >
             {open ? "✕" : "☰"}
           </button>
@@ -76,15 +76,15 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden border-t border-zinc-800 py-4 flex flex-col gap-4"
+            className="md:hidden border-t border-line py-4 flex flex-col gap-4"
           >
-            <Link href="#caracteristicas" onClick={() => setOpen(false)} className="text-sm text-zinc-400 hover:text-white">
+            <Link href="#caracteristicas" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
               Características
             </Link>
-            <Link href="#como-funciona" onClick={() => setOpen(false)} className="text-sm text-zinc-400 hover:text-white">
+            <Link href="#como-funciona" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
               Cómo funciona
             </Link>
-            <Link href="#precios" onClick={() => setOpen(false)} className="text-sm text-zinc-400 hover:text-white">
+            <Link href="#precios" onClick={() => setOpen(false)} className="text-sm text-ink-2 hover:text-white">
               Precios
             </Link>
             {isLoggedIn ? (

@@ -28,9 +28,9 @@ function IOSShareDiagram() {
   return (
     <div className="relative mx-auto w-64 select-none">
       {/* Fake Safari bottom bar */}
-      <div className="rounded-2xl border border-zinc-700 bg-zinc-800 px-4 py-3 flex items-center justify-between">
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-500 text-xs">←</div>
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-500 text-xs">→</div>
+      <div className="rounded-2xl border border-line-2 bg-chip px-4 py-3 flex items-center justify-between">
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">←</div>
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">→</div>
         {/* Share button — highlighted */}
         <motion.div
           animate={{ scale: [1, 1.15, 1] }}
@@ -45,8 +45,8 @@ function IOSShareDiagram() {
             className="absolute inset-0 rounded-xl border border-gold"
           />
         </motion.div>
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-500 text-xs">⧉</div>
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-500 text-xs">⋯</div>
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">⧉</div>
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">⋯</div>
       </div>
 
       {/* Arrow + label */}
@@ -67,10 +67,10 @@ function IOSShareDiagram() {
 function IOSMenuDiagram() {
   return (
     <div className="relative mx-auto w-64 select-none">
-      <div className="rounded-2xl border border-zinc-700 bg-zinc-800 overflow-hidden">
+      <div className="rounded-2xl border border-line-2 bg-chip overflow-hidden">
         {/* Menu items */}
         {["Copiar", "Favoritos", "Leer más tarde"].map((item) => (
-          <div key={item} className="px-4 py-2.5 border-b border-zinc-700 text-sm text-zinc-500 flex items-center gap-3">
+          <div key={item} className="px-4 py-2.5 border-b border-line-2 text-sm text-ink-3 flex items-center gap-3">
             <div className="w-6 h-6 rounded-lg bg-zinc-700" />
             {item}
           </div>
@@ -79,7 +79,7 @@ function IOSMenuDiagram() {
         <motion.div
           animate={{ backgroundColor: ["rgb(39,39,42)", "rgba(212,168,83,0.18)", "rgb(39,39,42)"] }}
           transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-          className="px-4 py-2.5 border-b border-zinc-700 flex items-center gap-3"
+          className="px-4 py-2.5 border-b border-line-2 flex items-center gap-3"
         >
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
@@ -90,7 +90,7 @@ function IOSMenuDiagram() {
           </motion.div>
           <span className="text-sm font-semibold text-gold">Agregar a inicio</span>
         </motion.div>
-        <div className="px-4 py-2.5 text-sm text-zinc-500 flex items-center gap-3">
+        <div className="px-4 py-2.5 text-sm text-ink-3 flex items-center gap-3">
           <div className="w-6 h-6 rounded-lg bg-zinc-700" />
           Más opciones
         </div>
@@ -105,9 +105,9 @@ function DesktopInstallDiagram() {
   return (
     <div className="relative mx-auto w-full max-w-xs select-none">
       {/* Fake address bar */}
-      <div className="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2.5 flex items-center gap-2">
+      <div className="rounded-xl border border-line-2 bg-chip px-3 py-2.5 flex items-center gap-2">
         <div className="flex-1 rounded-lg bg-zinc-700 h-5 flex items-center px-2">
-          <span className="text-xs text-zinc-500 truncate">barber-rylax.vercel.app</span>
+          <span className="text-xs text-ink-3 truncate">barber-rylax.vercel.app</span>
         </div>
         {/* Install icon highlighted */}
         <motion.div
@@ -205,18 +205,18 @@ export default function InstallTutorial() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-zinc-950/95 backdrop-blur-sm"
+          className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-base/95 backdrop-blur-sm"
         >
           <motion.div
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-zinc-800 bg-zinc-900 p-8"
+            className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-line bg-card p-8"
           >
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="text-2xl">✂</span>
               <span className="text-xl font-bold">
-                <span className="text-white">Barber</span>
+                <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
               </span>
             </div>
@@ -229,10 +229,10 @@ export default function InstallTutorial() {
               📲
             </motion.div>
 
-            <h2 className="text-lg font-bold text-white text-center mb-2">
+            <h2 className="text-lg font-bold text-ink text-center mb-2">
               Instala BarberFlow como app
             </h2>
-            <p className="text-sm text-zinc-400 text-center leading-relaxed mb-6">
+            <p className="text-sm text-ink-2 text-center leading-relaxed mb-6">
               Accede directo desde tu{" "}
               {platform === "android" ? "pantalla de inicio" : "escritorio"}, sin abrir el
               navegador. Se ve y funciona como una app real.
@@ -249,19 +249,19 @@ export default function InstallTutorial() {
             ) : (
               <>
                 <DesktopInstallDiagram />
-                <p className="text-xs text-zinc-500 text-center mt-3 mb-4">
+                <p className="text-xs text-ink-3 text-center mt-3 mb-4">
                   Haz clic en el ícono <span className="text-gold font-bold">⊕</span> en la barra de direcciones
                 </p>
                 <button
                   onClick={finish}
-                  className="w-full rounded-xl bg-zinc-800 border border-zinc-700 py-3.5 text-sm font-semibold text-white hover:border-gold hover:text-gold transition-all mb-3"
+                  className="w-full rounded-xl bg-chip border border-line-2 py-3.5 text-sm font-semibold text-ink hover:border-gold hover:text-gold transition-all mb-3"
                 >
                   Ya la instalé ✓
                 </button>
               </>
             )}
 
-            <button onClick={finish} className="w-full text-xs text-zinc-600 hover:text-zinc-400 transition-colors py-1">
+            <button onClick={finish} className="w-full text-xs text-ink-4 hover:text-ink-2 transition-colors py-1">
               Instalar después
             </button>
           </motion.div>
@@ -296,10 +296,10 @@ export default function InstallTutorial() {
       title: "3. Toca «Agregar»",
       desc: "En la esquina superior derecha del popup que aparece, toca «Agregar». ¡Listo!",
       visual: (
-        <div className="mx-auto w-64 rounded-2xl border border-zinc-700 bg-zinc-800 p-4">
+        <div className="mx-auto w-64 rounded-2xl border border-line-2 bg-chip p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-blue-400">Cancelar</span>
-            <span className="text-sm text-zinc-300 font-medium">Agregar a inicio</span>
+            <span className="text-sm text-ink-2 font-medium">Agregar a inicio</span>
             <motion.span
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ repeat: Infinity, duration: 1.4 }}
@@ -310,8 +310,8 @@ export default function InstallTutorial() {
           </div>
           <div className="flex flex-col items-center gap-2">
             <div className="w-14 h-14 rounded-2xl bg-zinc-700 flex items-center justify-center text-2xl border border-gold/30">✂</div>
-            <span className="text-sm text-white font-medium">BarberFlow</span>
-            <span className="text-xs text-zinc-500">barber-rylax.vercel.app</span>
+            <span className="text-sm text-ink font-medium">BarberFlow</span>
+            <span className="text-xs text-ink-3">barber-rylax.vercel.app</span>
           </div>
         </div>
       ),
@@ -327,7 +327,7 @@ export default function InstallTutorial() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-zinc-950/95 backdrop-blur-sm"
+        className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-base/95 backdrop-blur-sm"
       >
         <motion.div
           key={step}
@@ -335,27 +335,27 @@ export default function InstallTutorial() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25 }}
-          className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-zinc-800 bg-zinc-900 p-8"
+          className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-line bg-card p-8"
         >
           <div className="flex items-center justify-center gap-2 mb-6">
             <span className="text-2xl">✂</span>
             <span className="text-xl font-bold">
-              <span className="text-white">Barber</span>
+              <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>
             </span>
           </div>
 
           <div className="mb-5">{current.visual}</div>
 
-          <h2 className="text-lg font-bold text-white text-center mb-2">{current.title}</h2>
-          <p className="text-sm text-zinc-400 text-center leading-relaxed mb-6">{current.desc}</p>
+          <h2 className="text-lg font-bold text-ink text-center mb-2">{current.title}</h2>
+          <p className="text-sm text-ink-2 text-center leading-relaxed mb-6">{current.desc}</p>
 
           <button
             onClick={next}
             className={`w-full rounded-xl py-3.5 text-sm font-bold transition-all hover:scale-[1.02] mb-4 ${
               step === iosSteps.length - 1
                 ? "bg-gold text-zinc-950 hover:bg-amber-400"
-                : "bg-zinc-800 border border-zinc-700 text-white hover:border-gold hover:text-gold"
+                : "bg-chip border border-line-2 text-ink hover:border-gold hover:text-gold"
             }`}
           >
             {current.btn}
@@ -374,7 +374,7 @@ export default function InstallTutorial() {
           </div>
 
           {/* Progress bar */}
-          <div className="h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+          <div className="h-0.5 bg-chip rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gold rounded-full"
               animate={{ width: `${progress * 100}%` }}

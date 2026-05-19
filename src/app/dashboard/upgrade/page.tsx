@@ -33,7 +33,7 @@ function PlanCard({ planKey, suscripcion, onSelect, loading, selectedKey }: Plan
       className={`relative flex flex-col rounded-2xl border p-6 transition-all ${
         isAnual
           ? "border-gold bg-gradient-to-b from-gold/10 to-zinc-900 shadow-lg shadow-gold/10"
-          : "border-zinc-800 bg-zinc-900"
+          : "border-line bg-card"
       }`}
     >
       {isAnual && (
@@ -45,7 +45,7 @@ function PlanCard({ planKey, suscripcion, onSelect, loading, selectedKey }: Plan
       )}
 
       <div className="mb-4">
-        <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isAnual ? "text-gold" : "text-zinc-500"}`}>
+        <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isAnual ? "text-gold" : "text-ink-3"}`}>
           {isAnual ? "Mejor valor" : "Flexible"}
         </p>
         <h3 className="text-lg font-bold">{plan.label}</h3>
@@ -55,17 +55,17 @@ function PlanCard({ planKey, suscripcion, onSelect, loading, selectedKey }: Plan
         <span className="text-3xl font-extrabold">
           ${plan.precioCOP.toLocaleString("es-CO")}
         </span>
-        <span className="text-zinc-500 text-sm ml-1">
+        <span className="text-ink-3 text-sm ml-1">
           COP / {plan.ciclo === "anual" ? "año" : "mes"}
         </span>
         {isAnual && (
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-ink-3">
             Equivale a ${Math.round(plan.precioCOP / 12).toLocaleString("es-CO")} COP/mes
           </p>
         )}
       </div>
 
-      <ul className="flex flex-col gap-2.5 mb-8 text-sm text-zinc-300">
+      <ul className="flex flex-col gap-2.5 mb-8 text-sm text-ink-2">
         {[
           "Barberos ilimitados",
           "Citas ilimitadas",
@@ -85,10 +85,10 @@ function PlanCard({ planKey, suscripcion, onSelect, loading, selectedKey }: Plan
         disabled={loading || esPlanActual}
         className={`mt-auto w-full rounded-xl py-3 text-sm font-semibold transition-all ${
           esPlanActual
-            ? "bg-zinc-700 text-zinc-500 cursor-default"
+            ? "bg-zinc-700 text-ink-3 cursor-default"
             : isAnual
             ? "bg-gold text-zinc-950 hover:bg-amber-400 hover:scale-[1.02] disabled:opacity-50"
-            : "border border-zinc-700 text-white hover:border-gold hover:text-gold disabled:opacity-50"
+            : "border border-line-2 text-ink hover:border-gold hover:text-gold disabled:opacity-50"
         }`}
       >
         {isLoading ? (
@@ -169,19 +169,19 @@ export default function UpgradePage() {
   const estado = getEstadoSuscripcion(suscripcion);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-base text-ink">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_-10%,rgba(212,168,83,0.08),transparent)] pointer-events-none" />
 
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl">✂</span>
             <span className="text-lg font-bold">
-              <span className="text-white">Barber</span>
+              <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>
             </span>
           </Link>
-          <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white transition-colors">
+          <Link href="/dashboard" className="text-sm text-ink-2 hover:text-ink transition-colors">
             ← Volver al dashboard
           </Link>
         </div>
@@ -200,7 +200,7 @@ export default function UpgradePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-zinc-400 max-w-md mx-auto"
+            className="text-ink-2 max-w-md mx-auto"
           >
             {estado.esTrial && estado.diasRestantes !== null && estado.diasRestantes > 0
               ? `Tu trial vence en ${estado.diasRestantes} día${estado.diasRestantes !== 1 ? "s" : ""}. Activa tu plan para no perder el acceso.`
@@ -212,7 +212,7 @@ export default function UpgradePage() {
 
         {loadingData ? (
           <div className="flex justify-center py-20">
-            <div className="h-8 w-8 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+            <div className="h-8 w-8 rounded-full border-2 border-line-2 border-t-gold animate-spin" />
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
@@ -243,9 +243,9 @@ export default function UpgradePage() {
           </motion.p>
         )}
 
-        <p className="mt-8 text-center text-xs text-zinc-600">
+        <p className="mt-8 text-center text-xs text-ink-4">
           Pagos seguros procesados por{" "}
-          <span className="text-zinc-500 font-medium">Wompi (Bancolombia)</span>
+          <span className="text-ink-3 font-medium">Wompi (Bancolombia)</span>
           {" "}· Acepta PSE, Nequi, tarjetas débito/crédito y Efecty
         </p>
       </main>

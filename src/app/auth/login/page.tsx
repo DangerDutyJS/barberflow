@@ -87,7 +87,7 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-base flex flex-col items-center justify-center px-4">
       {/* Fondo decorativo */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,168,83,0.07),transparent)] pointer-events-none" />
 
@@ -101,23 +101,23 @@ function LoginContent() {
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
           <span className="text-2xl">✂</span>
           <span className="text-2xl font-bold tracking-tight">
-            <span className="text-white">Barber</span>
+            <span className="text-ink">Barber</span>
             <span className="text-gold">Flow</span>
           </span>
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8">
+        <div className="rounded-2xl border border-line bg-card p-8">
           {/* Tabs */}
-          <div className="flex rounded-xl bg-zinc-800 p-1 mb-7">
+          <div className="flex rounded-xl bg-chip p-1 mb-7">
             {(["login", "registro"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => { setTab(t); setError(""); setSuccess(""); }}
                 className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-all ${
                   tab === t
-                    ? "bg-zinc-950 text-white shadow"
-                    : "text-zinc-500 hover:text-zinc-300"
+                    ? "bg-base text-ink shadow"
+                    : "text-ink-3 hover:text-ink-2"
                 }`}
               >
                 {t === "login" ? "Iniciar sesión" : "Crear cuenta"}
@@ -129,7 +129,7 @@ function LoginContent() {
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm font-medium text-white hover:border-zinc-500 hover:bg-zinc-700 transition-all disabled:opacity-50 mb-5"
+            className="w-full flex items-center justify-center gap-3 rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm font-medium text-ink hover:border-zinc-500 hover:bg-zinc-700 transition-all disabled:opacity-50 mb-5"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -142,42 +142,42 @@ function LoginContent() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-zinc-800" />
-            <span className="text-xs text-zinc-600">o con email</span>
-            <div className="flex-1 h-px bg-zinc-800" />
+            <div className="flex-1 h-px bg-chip" />
+            <span className="text-xs text-ink-4">o con email</span>
+            <div className="flex-1 h-px bg-chip" />
           </div>
 
           {/* Formulario */}
           <form onSubmit={handleEmailAuth} className="flex flex-col gap-4">
             {tab === "registro" && (
               <div>
-                <label className="block text-sm text-zinc-400 mb-1.5">Nombre completo</label>
+                <label className="block text-sm text-ink-2 mb-1.5">Nombre completo</label>
                 <input
                   type="text"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   placeholder="Tu nombre"
                   required
-                  className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-sm text-zinc-400 mb-1.5">Email</label>
+              <label className="block text-sm text-ink-2 mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tu@email.com"
                 required
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
               />
             </div>
 
             <div>
               <div className="flex justify-between mb-1.5">
-                <label className="text-sm text-zinc-400">Contraseña</label>
+                <label className="text-sm text-ink-2">Contraseña</label>
                 {tab === "login" && (
                   <button
                     type="button"
@@ -195,7 +195,7 @@ function LoginContent() {
                 placeholder="Mínimo 6 caracteres"
                 required
                 minLength={6}
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
               />
             </div>
 
@@ -233,8 +233,8 @@ function LoginContent() {
           </form>
         </div>
 
-        <p className="text-center text-sm text-zinc-600 mt-6">
-          <Link href="/" className="hover:text-zinc-400 transition-colors">
+        <p className="text-center text-sm text-ink-4 mt-6">
+          <Link href="/" className="hover:text-ink-2 transition-colors">
             ← Volver al inicio
           </Link>
         </p>

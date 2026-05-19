@@ -155,35 +155,35 @@ export default function ConfiguracionPage() {
   const appUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-base text-ink">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <span className="text-xl">✂</span>
               <span className="text-lg font-bold tracking-tight">
-                <span className="text-white">Barber</span>
+                <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
               </span>
             </Link>
             {barberia && (
               <>
-                <span className="hidden sm:block text-zinc-700">|</span>
-                <span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span>
+                <span className="hidden sm:block text-line-2">|</span>
+                <span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span>
               </>
             )}
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               {avatarUrl ? (
-                <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-zinc-700" />
+                <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-line-2" />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
                   {userName[0]?.toUpperCase()}
                 </div>
               )}
-              <span className="text-sm text-zinc-300 hidden sm:block">{userName}</span>
+              <span className="text-sm text-ink-2 hidden sm:block">{userName}</span>
             </div>
             <SignOutButton />
           </div>
@@ -193,31 +193,31 @@ export default function ConfiguracionPage() {
       <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
         {/* Breadcrumb + título */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-zinc-500 mb-1">
-            <Link href="/dashboard" className="hover:text-zinc-300 transition-colors">Dashboard</Link>
+          <div className="flex items-center gap-2 text-sm text-ink-3 mb-1">
+            <Link href="/dashboard" className="hover:text-ink-2 transition-colors">Dashboard</Link>
             <span>/</span>
-            <span className="text-zinc-300">Mi barbería</span>
+            <span className="text-ink-2">Mi barbería</span>
           </div>
           <h1 className="text-2xl font-bold">Configuración</h1>
-          <p className="text-zinc-500 text-sm mt-1">Edita la información pública de tu barbería.</p>
+          <p className="text-ink-3 text-sm mt-1">Edita la información pública de tu barbería.</p>
         </div>
 
         {loadingData ? (
           <div className="flex justify-center py-20">
-            <div className="h-8 w-8 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+            <div className="h-8 w-8 rounded-full border-2 border-line-2 border-t-gold animate-spin" />
           </div>
         ) : (
           <form onSubmit={handleGuardar} className="flex flex-col gap-6">
 
             {/* Sección — Información básica */}
-            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+            <section className="rounded-2xl border border-line bg-card p-6">
+              <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-5">
                 Información básica
               </h2>
               <div className="flex flex-col gap-4">
 
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">
+                  <label className="block text-sm text-ink-2 mb-1.5">
                     Nombre de la barbería <span className="text-gold">*</span>
                   </label>
                   <input
@@ -226,27 +226,27 @@ export default function ConfiguracionPage() {
                     onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
                     placeholder="Ej: Barbería El Estilo"
                     required
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">Descripción</label>
+                  <label className="block text-sm text-ink-2 mb-1.5">Descripción</label>
                   <textarea
                     value={form.descripcion ?? ""}
                     onChange={(e) => setForm((f) => ({ ...f, descripcion: e.target.value }))}
                     placeholder="Describe tu barbería, especialidades, ambiente..."
                     rows={3}
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
                   />
                 </div>
 
                 {/* Logo upload */}
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">Logo</label>
+                  <label className="block text-sm text-ink-2 mb-1.5">Logo</label>
                   <div className="flex items-center gap-4">
                     {/* Preview */}
-                    <div className="w-16 h-16 rounded-xl border border-zinc-700 bg-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="w-16 h-16 rounded-xl border border-line-2 bg-chip flex items-center justify-center overflow-hidden shrink-0">
                       {form.logo_url ? (
                         <img
                           src={form.logo_url}
@@ -270,7 +270,7 @@ export default function ConfiguracionPage() {
                       />
                       <label
                         htmlFor="logo-upload"
-                        className={`flex items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-gold hover:text-gold transition-colors cursor-pointer ${uploadingLogo ? "opacity-50 pointer-events-none" : ""}`}
+                        className={`flex items-center justify-center gap-2 rounded-xl border border-line-2 bg-chip px-4 py-2.5 text-sm font-medium text-ink-2 hover:border-gold hover:text-gold transition-colors cursor-pointer ${uploadingLogo ? "opacity-50 pointer-events-none" : ""}`}
                       >
                         {uploadingLogo ? (
                           <>
@@ -284,7 +284,7 @@ export default function ConfiguracionPage() {
                           </>
                         )}
                       </label>
-                      <p className="text-xs text-zinc-600">JPG, PNG, WebP · Máx. 2 MB</p>
+                      <p className="text-xs text-ink-4">JPG, PNG, WebP · Máx. 2 MB</p>
                     </div>
                   </div>
 
@@ -295,7 +295,7 @@ export default function ConfiguracionPage() {
                       value={form.logo_url ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, logo_url: e.target.value }))}
                       placeholder="O pega una URL de imagen..."
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-2.5 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>
@@ -303,16 +303,16 @@ export default function ConfiguracionPage() {
             </section>
 
             {/* Sección — Link público */}
-            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+            <section className="rounded-2xl border border-line bg-card p-6">
+              <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-5">
                 Link público
               </h2>
               <div>
-                <label className="block text-sm text-zinc-400 mb-1.5">
+                <label className="block text-sm text-ink-2 mb-1.5">
                   URL de agendamiento <span className="text-gold">*</span>
                 </label>
-                <div className="flex items-center rounded-xl border border-zinc-700 bg-zinc-800 overflow-hidden focus-within:border-gold focus-within:ring-1 focus-within:ring-gold transition-colors">
-                  <span className="px-3 py-3 text-sm text-zinc-500 border-r border-zinc-700 shrink-0 select-none">
+                <div className="flex items-center rounded-xl border border-line-2 bg-chip overflow-hidden focus-within:border-gold focus-within:ring-1 focus-within:ring-gold transition-colors">
+                  <span className="px-3 py-3 text-sm text-ink-3 border-r border-line-2 shrink-0 select-none">
                     /b/
                   </span>
                   <input
@@ -320,13 +320,13 @@ export default function ConfiguracionPage() {
                     value={form.slug}
                     onChange={(e) => handleSlugChange(e.target.value)}
                     placeholder="mi-barberia"
-                    className="flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder-zinc-600 outline-none"
+                    className="flex-1 bg-transparent px-3 py-3 text-sm text-ink placeholder-zinc-600 outline-none"
                   />
                 </div>
                 {slugError ? (
                   <p className="mt-1.5 text-xs text-red-400">{slugError}</p>
                 ) : form.slug ? (
-                  <p className="mt-1.5 text-xs text-zinc-500">
+                  <p className="mt-1.5 text-xs text-ink-3">
                     Tu página:{" "}
                     <span className="text-gold font-mono">{appUrl}/b/{form.slug}</span>
                   </p>
@@ -335,18 +335,18 @@ export default function ConfiguracionPage() {
             </section>
 
             {/* Sección — Contacto */}
-            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+            <section className="rounded-2xl border border-line bg-card p-6">
+              <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-5">
                 Contacto y ubicación
               </h2>
               <div className="flex flex-col gap-4">
                 {/* País */}
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">País</label>
+                  <label className="block text-sm text-ink-2 mb-1.5">País</label>
                   <select
                     value={form.pais ?? "CO"}
                     onChange={(e) => setForm((f) => ({ ...f, pais: e.target.value, departamento: "", ciudad: "" }))}
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                   >
                     {PAISES.map((p) => (
                       <option key={p.codigo} value={p.codigo}>{p.nombre}</option>
@@ -357,12 +357,12 @@ export default function ConfiguracionPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Departamento */}
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Departamento / Estado</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Departamento / Estado</label>
                     {getDepartamentos(form.pais ?? "").length > 0 ? (
                       <select
                         value={form.departamento ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       >
                         <option value="">Selecciona un departamento</option>
                         {getDepartamentos(form.pais ?? "").map((d) => (
@@ -375,19 +375,19 @@ export default function ConfiguracionPage() {
                         value={form.departamento ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
                         placeholder="Ej: Distrito Capital"
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     )}
                   </div>
 
                   {/* Ciudad */}
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Ciudad</label>
                     {getCiudades(form.pais ?? "", form.departamento ?? "").length > 0 ? (
                       <select
                         value={form.ciudad ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       >
                         <option value="">Selecciona una ciudad</option>
                         {getCiudades(form.pais ?? "", form.departamento ?? "").map((c) => (
@@ -400,7 +400,7 @@ export default function ConfiguracionPage() {
                         value={form.ciudad ?? ""}
                         onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
                         placeholder="Ej: Bogotá"
-                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                        className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                       />
                     )}
                   </div>
@@ -408,35 +408,35 @@ export default function ConfiguracionPage() {
 
                 {/* Dirección */}
                 <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
+                  <label className="block text-sm text-ink-2 mb-1.5">Dirección</label>
                   <input
                     type="text"
                     value={form.direccion ?? ""}
                     onChange={(e) => setForm((f) => ({ ...f, direccion: e.target.value }))}
                     placeholder="Calle 10 # 5-20"
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Teléfono / WhatsApp</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Teléfono / WhatsApp</label>
                     <input
                       type="tel"
                       value={form.telefono ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, telefono: e.target.value }))}
                       placeholder="+57 300 000 0000"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm text-zinc-400 mb-1.5">Email de contacto</label>
+                    <label className="block text-sm text-ink-2 mb-1.5">Email de contacto</label>
                     <input
                       type="email"
                       value={form.email ?? ""}
                       onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                       placeholder="barberia@email.com"
-                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
                 </div>
@@ -447,7 +447,7 @@ export default function ConfiguracionPage() {
             <div className="flex items-center justify-between">
               <Link
                 href="/dashboard"
-                className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="text-sm text-ink-3 hover:text-ink-2 transition-colors"
               >
                 ← Volver al dashboard
               </Link>
@@ -479,8 +479,8 @@ export default function ConfiguracionPage() {
             exit={{ opacity: 0, y: 20 }}
             className={`fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border px-5 py-3 text-sm font-medium shadow-xl ${
               toast.tipo === "error"
-                ? "border-red-500/30 bg-zinc-900 text-red-400"
-                : "border-zinc-700 bg-zinc-900 text-white"
+                ? "border-red-500/30 bg-card text-red-400"
+                : "border-line-2 bg-card text-ink"
             }`}
           >
             {toast.msg}

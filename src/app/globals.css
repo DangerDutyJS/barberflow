@@ -1,10 +1,47 @@
 @import "tailwindcss";
 
+/* ── Semantic design tokens ─────────────────────────────────────────────────── */
+:root {
+  /* Dark (default) */
+  --base:   #09090b;
+  --card:   #18181b;
+  --chip:   #27272a;
+  --line:   #27272a;
+  --line-2: #3f3f46;
+  --ink:    #ffffff;
+  --ink-2:  #a1a1aa;
+  --ink-3:  #71717a;
+  --ink-4:  #52525b;
+}
+
+:root.light {
+  --base:   #ffffff;
+  --card:   #f4f4f5;
+  --chip:   #e4e4e7;
+  --line:   #e4e4e7;
+  --line-2: #d4d4d8;
+  --ink:    #09090b;
+  --ink-2:  #52525b;
+  --ink-3:  #71717a;
+  --ink-4:  #a1a1aa;
+}
+
 @theme inline {
   --font-sans: var(--font-geist);
-  --color-gold: #d4a853;
+  --color-gold:      #d4a853;
   --color-gold-light: #e8c47a;
-  --color-gold-dark: #b8892e;
+  --color-gold-dark:  #b8892e;
+
+  /* Expose CSS vars as Tailwind colors */
+  --color-base:   var(--base);
+  --color-card:   var(--card);
+  --color-chip:   var(--chip);
+  --color-line:   var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink:    var(--ink);
+  --color-ink-2:  var(--ink-2);
+  --color-ink-3:  var(--ink-3);
+  --color-ink-4:  var(--ink-4);
 }
 
 html {
@@ -13,4 +50,6 @@ html {
 
 body {
   font-family: var(--font-geist), Arial, sans-serif;
+  background-color: var(--base);
+  color: var(--ink);
 }

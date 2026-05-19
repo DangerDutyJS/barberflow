@@ -74,39 +74,39 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6 max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-md rounded-2xl border border-line bg-card p-6 max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold">{servicio ? "Editar servicio" : "Nuevo servicio"}</h2>
-          <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors text-xl leading-none">×</button>
+          <button onClick={onClose} className="text-ink-3 hover:text-ink transition-colors text-xl leading-none">×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">Nombre <span className="text-gold">*</span></label>
+            <label className="block text-sm text-ink-2 mb-1.5">Nombre <span className="text-gold">*</span></label>
             <input
               type="text" value={form.nombre} onChange={(e) => set("nombre", e.target.value)}
               placeholder="Ej: Corte clásico" autoFocus
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">Descripción <span className="text-zinc-600 text-xs">(opcional)</span></label>
+            <label className="block text-sm text-ink-2 mb-1.5">Descripción <span className="text-ink-4 text-xs">(opcional)</span></label>
             <textarea
               value={form.descripcion} onChange={(e) => set("descripcion", e.target.value)}
               placeholder="Describe el servicio brevemente..." rows={2}
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+              className="w-full rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">Duración <span className="text-gold">*</span></label>
+            <label className="block text-sm text-ink-2 mb-1.5">Duración <span className="text-gold">*</span></label>
             <div className="flex flex-wrap gap-2 mb-2">
               {DURACIONES_RAPIDAS.map((d) => (
                 <button key={d} type="button" onClick={() => set("duracion_minutos", d)}
                   className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                    form.duracion_minutos === d ? "bg-gold text-zinc-950" : "border border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white"
+                    form.duracion_minutos === d ? "bg-gold text-zinc-950" : "border border-line-2 text-ink-2 hover:border-zinc-500 hover:text-ink"
                   }`}>
                   {formatDuracion(d)}
                 </button>
@@ -117,25 +117,25 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
                 type="number" value={form.duracion_minutos}
                 onChange={(e) => set("duracion_minutos", Math.max(5, parseInt(e.target.value) || 5))}
                 min={5} max={480}
-                className="w-24 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-center"
+                className="w-24 rounded-xl border border-line-2 bg-chip px-4 py-3 text-sm text-ink outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-center"
               />
-              <span className="text-sm text-zinc-500">minutos</span>
-              <span className="text-sm text-zinc-600 ml-auto">= {formatDuracion(form.duracion_minutos)}</span>
+              <span className="text-sm text-ink-3">minutos</span>
+              <span className="text-sm text-ink-4 ml-auto">= {formatDuracion(form.duracion_minutos)}</span>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-zinc-400 mb-1.5">Precio (COP) <span className="text-gold">*</span></label>
+            <label className="block text-sm text-ink-2 mb-1.5">Precio (COP) <span className="text-gold">*</span></label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-medium">$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-3 text-sm font-medium">$</span>
               <input
                 type="number" value={form.precio}
                 onChange={(e) => set("precio", Math.max(0, parseInt(e.target.value) || 0))}
                 min={0} placeholder="0"
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-800 pl-8 pr-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-xl border border-line-2 bg-chip pl-8 pr-4 py-3 text-sm text-ink placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
               />
             </div>
-            {form.precio > 0 && <p className="mt-1 text-xs text-zinc-600">{formatPrecio(form.precio)} COP</p>}
+            {form.precio > 0 && <p className="mt-1 text-xs text-ink-4">{formatPrecio(form.precio)} COP</p>}
           </div>
 
           {error && (
@@ -147,7 +147,7 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
 
           <div className="flex gap-3 mt-2">
             <button type="button" onClick={onClose}
-              className="flex-1 rounded-xl border border-zinc-700 py-3 text-sm font-semibold text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors">
+              className="flex-1 rounded-xl border border-line-2 py-3 text-sm font-semibold text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors">
               Cancelar
             </button>
             <button type="submit" disabled={saving || !form.nombre.trim()}
@@ -165,11 +165,11 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
 
 function StatCard({ icon, label, value, sub }: { icon: string; label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+    <div className="rounded-2xl border border-line bg-card p-5">
       <div className="text-2xl mb-2">{icon}</div>
-      <div className="text-xl font-bold text-white">{value}</div>
-      <div className="text-xs text-zinc-500 mt-0.5">{label}</div>
-      {sub && <div className="text-xs text-zinc-600 mt-1">{sub}</div>}
+      <div className="text-xl font-bold text-ink">{value}</div>
+      <div className="text-xs text-ink-3 mt-0.5">{label}</div>
+      {sub && <div className="text-xs text-ink-4 mt-1">{sub}</div>}
     </div>
   );
 }
@@ -309,26 +309,26 @@ export default function ServiciosPage() {
   function abrirEditar(s: Servicio) { setEditando(s); setShowModal(true); }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-base text-ink">
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <span className="text-xl">✂</span>
               <span className="text-lg font-bold tracking-tight">
-                <span className="text-white">Barber</span><span className="text-gold">Flow</span>
+                <span className="text-ink">Barber</span><span className="text-gold">Flow</span>
               </span>
             </Link>
-            {barberia && <><span className="hidden sm:block text-zinc-700">|</span><span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span></>}
+            {barberia && <><span className="hidden sm:block text-line-2">|</span><span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span></>}
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               {avatarUrl
-                ? <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-zinc-700" />
+                ? <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-line-2" />
                 : <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">{userName[0]?.toUpperCase()}</div>
               }
-              <span className="text-sm text-zinc-300 hidden sm:block">{userName}</span>
+              <span className="text-sm text-ink-2 hidden sm:block">{userName}</span>
             </div>
             <SignOutButton />
           </div>
@@ -339,10 +339,10 @@ export default function ServiciosPage() {
         {/* Breadcrumb + título */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 text-sm text-zinc-500 mb-1">
-              <Link href="/dashboard" className="hover:text-zinc-300 transition-colors">Dashboard</Link>
+            <div className="flex items-center gap-2 text-sm text-ink-3 mb-1">
+              <Link href="/dashboard" className="hover:text-ink-2 transition-colors">Dashboard</Link>
               <span>/</span>
-              <span className="text-zinc-300">Servicios</span>
+              <span className="text-ink-2">Servicios</span>
             </div>
             <h1 className="text-2xl font-bold">Servicios</h1>
           </div>
@@ -354,7 +354,7 @@ export default function ServiciosPage() {
 
         {loadingData ? (
           <div className="flex justify-center py-20">
-            <div className="h-8 w-8 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+            <div className="h-8 w-8 rounded-full border-2 border-line-2 border-t-gold animate-spin" />
           </div>
         ) : (
           <>
@@ -390,7 +390,7 @@ export default function ServiciosPage() {
               >
                 <div className="text-5xl mb-4">✂</div>
                 <h3 className="text-lg font-semibold mb-2">Sin servicios aún</h3>
-                <p className="text-zinc-500 text-sm mb-6 max-w-xs">
+                <p className="text-ink-3 text-sm mb-6 max-w-xs">
                   Agrega los cortes y servicios que ofrece tu barbería con sus precios y tiempos.
                 </p>
                 <button onClick={abrirAgregar}
@@ -404,31 +404,31 @@ export default function ServiciosPage() {
                 <div className="flex flex-col sm:flex-row gap-3 mb-4">
                   {/* Búsqueda */}
                   <div className="relative flex-1">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">🔍</span>
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3 text-sm">🔍</span>
                     <input
                       type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
                       placeholder="Buscar servicio..."
-                      className="w-full rounded-xl border border-zinc-800 bg-zinc-900 pl-9 pr-4 py-2.5 text-sm text-white placeholder-zinc-600 outline-none focus:border-zinc-600 transition-colors"
+                      className="w-full rounded-xl border border-line bg-card pl-9 pr-4 py-2.5 text-sm text-ink placeholder-zinc-600 outline-none focus:border-zinc-600 transition-colors"
                     />
                     {busqueda && (
                       <button onClick={() => setBusqueda("")}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-lg leading-none">
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink text-lg leading-none">
                         ×
                       </button>
                     )}
                   </div>
 
                   {/* Filtro estado */}
-                  <div className="flex rounded-xl border border-zinc-800 bg-zinc-900 p-1 gap-1">
+                  <div className="flex rounded-xl border border-line bg-card p-1 gap-1">
                     {([["todos", "Todos"], ["activos", "Activos"], ["inactivos", "Inactivos"]] as [Filtro, string][]).map(([val, label]) => (
                       <button key={val} onClick={() => setFiltro(val)}
                         className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-                          filtro === val ? "bg-zinc-700 text-white" : "text-zinc-500 hover:text-zinc-300"
+                          filtro === val ? "bg-zinc-700 text-ink" : "text-ink-3 hover:text-ink-2"
                         }`}>
                         {label}
-                        {val === "todos" && <span className="ml-1.5 text-zinc-600">{servicios.length}</span>}
-                        {val === "activos" && <span className="ml-1.5 text-zinc-600">{stats.activos}</span>}
-                        {val === "inactivos" && <span className="ml-1.5 text-zinc-600">{servicios.length - stats.activos}</span>}
+                        {val === "todos" && <span className="ml-1.5 text-ink-4">{servicios.length}</span>}
+                        {val === "activos" && <span className="ml-1.5 text-ink-4">{stats.activos}</span>}
+                        {val === "inactivos" && <span className="ml-1.5 text-ink-4">{servicios.length - stats.activos}</span>}
                       </button>
                     ))}
                   </div>
@@ -436,7 +436,7 @@ export default function ServiciosPage() {
                   {/* Orden */}
                   <select
                     value={orden} onChange={(e) => setOrden(e.target.value as Orden)}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2.5 text-xs text-zinc-400 outline-none focus:border-zinc-600 transition-colors"
+                    className="rounded-xl border border-line bg-card px-3 py-2.5 text-xs text-ink-2 outline-none focus:border-zinc-600 transition-colors"
                   >
                     <option value="nombre">Ordenar: A–Z</option>
                     <option value="precio_asc">Precio: menor a mayor</option>
@@ -449,7 +449,7 @@ export default function ServiciosPage() {
                 {serviciosFiltrados.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
                     <div className="text-4xl mb-3">🔍</div>
-                    <p className="text-zinc-500 text-sm">
+                    <p className="text-ink-3 text-sm">
                       No se encontraron servicios{busqueda ? ` para "${busqueda}"` : ""}.
                     </p>
                     <button onClick={() => { setBusqueda(""); setFiltro("todos"); }}
@@ -460,41 +460,41 @@ export default function ServiciosPage() {
                 ) : (
                   <>
                     {/* Tabla desktop */}
-                    <div className="hidden sm:block rounded-2xl border border-zinc-800 overflow-hidden">
+                    <div className="hidden sm:block rounded-2xl border border-line overflow-hidden">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-zinc-800 bg-zinc-900/80">
-                            <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider w-8">#</th>
-                            <th className="text-left px-5 py-3.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Servicio</th>
-                            <th className="text-center px-5 py-3.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Duración</th>
-                            <th className="text-right px-5 py-3.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Precio</th>
-                            <th className="text-center px-5 py-3.5 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Estado</th>
+                          <tr className="border-b border-line bg-card/80">
+                            <th className="text-left px-5 py-3.5 text-xs font-semibold text-ink-3 uppercase tracking-wider w-8">#</th>
+                            <th className="text-left px-5 py-3.5 text-xs font-semibold text-ink-3 uppercase tracking-wider">Servicio</th>
+                            <th className="text-center px-5 py-3.5 text-xs font-semibold text-ink-3 uppercase tracking-wider">Duración</th>
+                            <th className="text-right px-5 py-3.5 text-xs font-semibold text-ink-3 uppercase tracking-wider">Precio</th>
+                            <th className="text-center px-5 py-3.5 text-xs font-semibold text-ink-3 uppercase tracking-wider">Estado</th>
                             <th className="px-5 py-3.5 w-64" />
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-800/60 bg-zinc-900">
+                        <tbody className="divide-y divide-zinc-800/60 bg-card">
                           <AnimatePresence mode="popLayout">
                             {serviciosFiltrados.map((s, i) => (
                               <motion.tr key={s.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                className={`group transition-colors hover:bg-zinc-800/40 ${!s.activo ? "opacity-50" : ""}`}>
-                                <td className="px-5 py-4 text-zinc-700 text-xs">{i + 1}</td>
+                                className={`group transition-colors hover:bg-chip/40 ${!s.activo ? "opacity-50" : ""}`}>
+                                <td className="px-5 py-4 text-line-2 text-xs">{i + 1}</td>
                                 <td className="px-5 py-4">
-                                  <div className="font-medium text-white">{s.nombre}</div>
-                                  {s.descripcion && <div className="text-xs text-zinc-500 mt-0.5 max-w-xs truncate">{s.descripcion}</div>}
+                                  <div className="font-medium text-ink">{s.nombre}</div>
+                                  {s.descripcion && <div className="text-xs text-ink-3 mt-0.5 max-w-xs truncate">{s.descripcion}</div>}
                                 </td>
                                 <td className="px-5 py-4 text-center">
-                                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-800 px-2.5 py-1 text-xs text-zinc-400">
+                                  <span className="inline-flex items-center gap-1.5 rounded-lg bg-chip px-2.5 py-1 text-xs text-ink-2">
                                     🕐 {formatDuracion(s.duracion_minutos)}
                                   </span>
                                 </td>
                                 <td className="px-5 py-4 text-right">
-                                  <span className={`font-semibold ${Number(s.precio) === 0 ? "text-zinc-500" : "text-gold"}`}>
+                                  <span className={`font-semibold ${Number(s.precio) === 0 ? "text-ink-3" : "text-gold"}`}>
                                     {Number(s.precio) === 0 ? "Gratis" : formatPrecio(Number(s.precio))}
                                   </span>
                                 </td>
                                 <td className="px-5 py-4 text-center">
                                   <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                    s.activo ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-zinc-800 text-zinc-500 border border-zinc-700"
+                                    s.activo ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-chip text-ink-3 border border-line-2"
                                   }`}>
                                     <span className={`w-1.5 h-1.5 rounded-full ${s.activo ? "bg-green-400" : "bg-zinc-600"}`} />
                                     {s.activo ? "Activo" : "Inactivo"}
@@ -503,19 +503,19 @@ export default function ServiciosPage() {
                                 <td className="px-5 py-4">
                                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={() => abrirEditar(s)}
-                                      className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 hover:border-zinc-500 hover:text-white transition-colors">
+                                      className="rounded-lg border border-line-2 px-3 py-1.5 text-xs text-ink-2 hover:border-zinc-500 hover:text-ink transition-colors">
                                       Editar
                                     </button>
                                     <button onClick={() => handleToggle(s.id, s.activo)}
                                       className={`rounded-lg border px-3 py-1.5 text-xs transition-colors ${
-                                        s.activo ? "border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-white" : "border-gold/30 text-gold hover:border-gold"
+                                        s.activo ? "border-line-2 text-ink-2 hover:border-zinc-500 hover:text-ink" : "border-gold/30 text-gold hover:border-gold"
                                       }`}>
                                       {s.activo ? "Desactivar" : "Activar"}
                                     </button>
                                     {confirmDeleteId === s.id ? (
                                       <div className="flex gap-1">
                                         <button onClick={() => setConfirmDeleteId(null)}
-                                          className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 hover:text-white transition-colors">
+                                          className="rounded-lg border border-line-2 px-3 py-1.5 text-xs text-ink-2 hover:text-ink transition-colors">
                                           Cancelar
                                         </button>
                                         <button onClick={() => handleEliminar(s.id)}
@@ -525,7 +525,7 @@ export default function ServiciosPage() {
                                       </div>
                                     ) : (
                                       <button onClick={() => setConfirmDeleteId(s.id)}
-                                        className="rounded-lg border border-zinc-800 px-3 py-1.5 text-xs text-zinc-600 hover:border-red-500/40 hover:text-red-400 transition-colors">
+                                        className="rounded-lg border border-line px-3 py-1.5 text-xs text-ink-4 hover:border-red-500/40 hover:text-red-400 transition-colors">
                                         Eliminar
                                       </button>
                                     )}
@@ -543,14 +543,14 @@ export default function ServiciosPage() {
                       <AnimatePresence mode="popLayout">
                         {serviciosFiltrados.map((s) => (
                           <motion.div key={s.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
-                            className={`rounded-2xl border border-zinc-800 bg-zinc-900 p-4 ${!s.activo ? "opacity-50" : ""}`}>
+                            className={`rounded-2xl border border-line bg-card p-4 ${!s.activo ? "opacity-50" : ""}`}>
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-semibold truncate">{s.nombre}</h3>
-                                {s.descripcion && <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{s.descripcion}</p>}
+                                {s.descripcion && <p className="text-xs text-ink-3 mt-0.5 line-clamp-2">{s.descripcion}</p>}
                               </div>
                               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium flex-shrink-0 ml-2 ${
-                                s.activo ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-zinc-800 text-zinc-500 border border-zinc-700"
+                                s.activo ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-chip text-ink-3 border border-line-2"
                               }`}>
                                 <span className={`w-1 h-1 rounded-full ${s.activo ? "bg-green-400" : "bg-zinc-600"}`} />
                                 {s.activo ? "Activo" : "Inactivo"}
@@ -558,29 +558,29 @@ export default function ServiciosPage() {
                             </div>
 
                             <div className="flex items-center gap-3 mb-3 text-sm">
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-zinc-800 px-2 py-0.5 text-xs text-zinc-400">
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-chip px-2 py-0.5 text-xs text-ink-2">
                                 🕐 {formatDuracion(s.duracion_minutos)}
                               </span>
-                              <span className={`font-bold ${Number(s.precio) === 0 ? "text-zinc-500 text-xs" : "text-gold text-sm"}`}>
+                              <span className={`font-bold ${Number(s.precio) === 0 ? "text-ink-3 text-xs" : "text-gold text-sm"}`}>
                                 {Number(s.precio) === 0 ? "Gratis" : formatPrecio(Number(s.precio))}
                               </span>
                             </div>
 
                             <div className="flex gap-2">
-                              <button onClick={() => abrirEditar(s)} className="flex-1 rounded-xl border border-zinc-700 py-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors">Editar</button>
+                              <button onClick={() => abrirEditar(s)} className="flex-1 rounded-xl border border-line-2 py-2 text-xs font-semibold text-ink-2 hover:text-ink transition-colors">Editar</button>
                               <button onClick={() => handleToggle(s.id, s.activo)}
                                 className={`flex-1 rounded-xl border py-2 text-xs font-semibold transition-colors ${
-                                  s.activo ? "border-zinc-700 text-zinc-400 hover:text-white" : "border-gold/30 text-gold"
+                                  s.activo ? "border-line-2 text-ink-2 hover:text-ink" : "border-gold/30 text-gold"
                                 }`}>
                                 {s.activo ? "Desactivar" : "Activar"}
                               </button>
                               {confirmDeleteId === s.id ? (
                                 <>
-                                  <button onClick={() => setConfirmDeleteId(null)} className="flex-1 rounded-xl border border-zinc-700 py-2 text-xs text-zinc-400">Cancelar</button>
+                                  <button onClick={() => setConfirmDeleteId(null)} className="flex-1 rounded-xl border border-line-2 py-2 text-xs text-ink-2">Cancelar</button>
                                   <button onClick={() => handleEliminar(s.id)} className="flex-1 rounded-xl bg-red-500/20 border border-red-500/40 py-2 text-xs text-red-400">Confirmar</button>
                                 </>
                               ) : (
-                                <button onClick={() => setConfirmDeleteId(s.id)} className="flex-1 rounded-xl border border-zinc-800 py-2 text-xs text-zinc-600 hover:text-red-400 transition-colors">Eliminar</button>
+                                <button onClick={() => setConfirmDeleteId(s.id)} className="flex-1 rounded-xl border border-line py-2 text-xs text-ink-4 hover:text-red-400 transition-colors">Eliminar</button>
                               )}
                             </div>
                           </motion.div>
@@ -589,7 +589,7 @@ export default function ServiciosPage() {
                     </div>
 
                     {/* Footer de tabla */}
-                    <div className="mt-4 flex items-center justify-between text-xs text-zinc-600">
+                    <div className="mt-4 flex items-center justify-between text-xs text-ink-4">
                       <span>
                         {serviciosFiltrados.length} resultado{serviciosFiltrados.length !== 1 ? "s" : ""}
                         {(busqueda || filtro !== "todos") && ` · ${servicios.length} en total`}
@@ -622,7 +622,7 @@ export default function ServiciosPage() {
       <AnimatePresence>
         {toast && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-3 text-sm font-medium shadow-xl">
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border border-line-2 bg-card px-5 py-3 text-sm font-medium shadow-xl">
             {toast}
           </motion.div>
         )}

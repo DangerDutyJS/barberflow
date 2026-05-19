@@ -60,7 +60,7 @@ function UpgradeSuccessContent() {
   }, [ref]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-base text-white flex flex-col items-center justify-center px-4">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,168,83,0.07),transparent)] pointer-events-none" />
 
       <Link href="/" className="flex items-center gap-2 mb-10">
@@ -71,12 +71,12 @@ function UpgradeSuccessContent() {
         </span>
       </Link>
 
-      <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center">
+      <div className="w-full max-w-md rounded-2xl border border-line bg-card p-8 text-center">
         {estado === "verificando" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="mx-auto mb-6 h-16 w-16 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+            <div className="mx-auto mb-6 h-16 w-16 rounded-full border-2 border-line-2 border-t-gold animate-spin" />
             <h1 className="text-xl font-bold mb-2">Confirmando pago...</h1>
-            <p className="text-zinc-400 text-sm">Esto puede tomar unos segundos.</p>
+            <p className="text-ink-2 text-sm">Esto puede tomar unos segundos.</p>
           </motion.div>
         )}
 
@@ -91,12 +91,12 @@ function UpgradeSuccessContent() {
               <span className="text-4xl">✓</span>
             </motion.div>
             <h1 className="text-2xl font-bold mb-2">¡Plan activado!</h1>
-            <p className="text-zinc-400 text-sm mb-1">
+            <p className="text-ink-2 text-sm mb-1">
               {plan
                 ? `Suscripción ${plan.label} activa.`
                 : "Tu plan Pro está activo."}
             </p>
-            <p className="text-zinc-600 text-xs mb-8">
+            <p className="text-ink-4 text-xs mb-8">
               Recibirás un correo de confirmación a tu email registrado.
             </p>
             <Link
@@ -110,17 +110,17 @@ function UpgradeSuccessContent() {
 
         {estado === "pendiente" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-zinc-600 bg-zinc-800">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-zinc-600 bg-chip">
               <span className="text-4xl">⏳</span>
             </div>
             <h1 className="text-xl font-bold mb-2">Pago en procesamiento</h1>
-            <p className="text-zinc-400 text-sm mb-6">
+            <p className="text-ink-2 text-sm mb-6">
               Tu pago fue recibido. La activación puede demorar unos minutos.
               Refresca el dashboard para verificar.
             </p>
             <Link
               href="/dashboard"
-              className="block w-full rounded-xl bg-zinc-800 py-3 text-sm font-semibold text-white hover:bg-zinc-700 transition-colors"
+              className="block w-full rounded-xl bg-chip py-3 text-sm font-semibold text-white hover:bg-zinc-700 transition-colors"
             >
               Ir al dashboard
             </Link>

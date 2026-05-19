@@ -63,7 +63,7 @@ const headingVariant: Variants = {
 
 export default function Features() {
   return (
-    <section id="caracteristicas" className="py-24 border-t border-zinc-800">
+    <section id="caracteristicas" className="py-24 border-t border-line">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
@@ -77,7 +77,7 @@ export default function Features() {
           <motion.h2 variants={headingVariant} className="mt-3 text-3xl sm:text-4xl font-bold">
             Todo lo que necesita tu barbería
           </motion.h2>
-          <motion.p variants={headingVariant} className="mt-4 text-zinc-400 max-w-xl mx-auto">
+          <motion.p variants={headingVariant} className="mt-4 text-ink-2 max-w-xl mx-auto">
             Una plataforma completa diseñada específicamente para barberías modernas que quieren operar de forma profesional.
           </motion.p>
         </motion.div>
@@ -93,13 +93,13 @@ export default function Features() {
             <motion.div
               key={f.title}
               variants={cardVariant}
-              className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-7 hover:border-gold/40 hover:bg-zinc-900/60 transition-colors duration-300 cursor-default"
+              className="group rounded-2xl border border-line bg-card p-7 hover:border-gold/40 hover:bg-card/60 transition-colors duration-300 cursor-default"
             >
               <div className="mb-4 text-3xl">{f.icon}</div>
-              <h3 className="mb-2 text-lg font-semibold text-white group-hover:text-gold transition-colors">
+              <h3 className="mb-2 text-lg font-semibold text-ink group-hover:text-gold transition-colors">
                 {f.title}
               </h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">{f.description}</p>
+              <p className="text-sm text-ink-3 leading-relaxed">{f.description}</p>
             </motion.div>
           ))}
         </motion.div>

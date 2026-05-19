@@ -59,7 +59,7 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="mx-auto max-w-2xl text-lg text-zinc-400 leading-relaxed mb-10"
+          className="mx-auto max-w-2xl text-lg text-ink-2 leading-relaxed mb-10"
         >
           Agendamiento online, gestión de barberos, pagos y clientes — todo en una plataforma
           moderna. Diseñada para barberías que quieren crecer.
@@ -89,7 +89,7 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
           )}
           <a
             href="#como-funciona"
-            className="rounded-full border border-zinc-700 px-8 py-3.5 text-base font-semibold text-white hover:border-zinc-500 hover:bg-zinc-900 transition-colors"
+            className="rounded-full border border-line-2 px-8 py-3.5 text-base font-semibold text-ink hover:border-zinc-500 hover:bg-card transition-colors"
           >
             Ver cómo funciona →
           </a>
@@ -113,8 +113,8 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
               animate="visible"
               className="text-center"
             >
-              <div className="text-4xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-sm text-zinc-500">{stat.label}</div>
+              <div className="text-4xl font-bold text-ink mb-1">{stat.value}</div>
+              <div className="text-sm text-ink-3">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
