@@ -1,0 +1,348 @@
+"use client";
+export const dynamic = "force-dynamic";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
+import SignOutButton from "@/components/SignOutButton";
+import type { Barberia } from "@/types/database";
+
+type FormData = Pick<Barberia, "nombre" | "slug" | "descripcion" | "direccion" | "telefono" | "email" | "logo_url">;
+
+export default function ConfiguracionPage() {
+  const router = useRouter();
+  const supabase = createClient();
+
+  const [barberia, setBarberia] = useState<Barberia | null>(null);
+  const [form, setForm] = useState<FormData>({
+    nombre: "", slug: "", descripcion: "", direccion: "", telefono: "", email: "", logo_url: "",
+  });
+  const [userName, setUserName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [loadingData, setLoadingData] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{ msg: string; tipo: "ok" | "error" } | null>(null);
+  const [slugError, setSlugError] = useState("");
+
+  useEffect(() => {
+    async function cargar() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/auth/login"); return; }
+
+      setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario");
+      setAvatarUrl(user.user_metadata?.avatar_url ?? null);
+
+      const { data: bar } = await supabase
+        .from("barberias")
+        .select("*")
+        .eq("owner_id", user.id)
+        .single();
+
+      if (!bar) { router.push("/onboarding"); return; }
+
+      setBarberia(bar);
+      setForm({
+        nombre: bar.nombre ?? "",
+        slug: bar.slug ?? "",
+        descripcion: bar.descripcion ?? "",
+        direccion: bar.direccion ?? "",
+        telefono: bar.telefono ?? "",
+        email: bar.email ?? "",
+        logo_url: bar.logo_url ?? "",
+      });
+      setLoadingData(false);
+    }
+    cargar();
+  }, []);
+
+  function mostrarToast(msg: string, tipo: "ok" | "error" = "ok") {
+    setToast({ msg, tipo });
+    setTimeout(() => setToast(null), 3500);
+  }
+
+  function handleSlugChange(val: string) {
+    const sanitizado = val.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/--+/g, "-");
+    setForm((f) => ({ ...f, slug: sanitizado }));
+    if (sanitizado.length < 3) {
+      setSlugError("Mínimo 3 caracteres.");
+    } else if (sanitizado.length > 50) {
+      setSlugError("Máximo 50 caracteres.");
+    } else {
+      setSlugError("");
+    }
+  }
+
+  async function handleGuardar(e: React.FormEvent) {
+    e.preventDefault();
+    if (!barberia) return;
+    if (!form.nombre.trim()) { mostrarToast("El nombre es obligatorio.", "error"); return; }
+    if (slugError) return;
+
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from("barberias")
+        .update({
+          nombre: form.nombre.trim(),
+          slug: form.slug.trim(),
+          descripcion: form.descripcion?.trim() || null,
+          direccion: form.direccion?.trim() || null,
+          telefono: form.telefono?.trim() || null,
+          email: form.email?.trim() || null,
+          logo_url: form.logo_url?.trim() || null,
+        })
+        .eq("id", barberia.id);
+
+      if (error) {
+        if (error.message.includes("duplicate") || error.message.includes("unique")) {
+          mostrarToast("Ese link ya está en uso. Elige otro.", "error");
+        } else {
+          mostrarToast("Error al guardar. Intenta de nuevo.", "error");
+        }
+      } else {
+        mostrarToast("Cambios guardados correctamente.");
+        setBarberia((prev) => prev ? { ...prev, ...form } : prev);
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const appUrl = typeof window !== "undefined" ? window.location.origin : "";
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white">
+      {/* Header */}
+      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-xl">✂</span>
+              <span className="text-lg font-bold tracking-tight">
+                <span className="text-white">Barber</span>
+                <span className="text-gold">Flow</span>
+              </span>
+            </Link>
+            {barberia && (
+              <>
+                <span className="hidden sm:block text-zinc-700">|</span>
+                <span className="hidden sm:block text-sm text-zinc-400">{barberia.nombre}</span>
+              </>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-zinc-700" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
+                  {userName[0]?.toUpperCase()}
+                </div>
+              )}
+              <span className="text-sm text-zinc-300 hidden sm:block">{userName}</span>
+            </div>
+            <SignOutButton />
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Breadcrumb + título */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 text-sm text-zinc-500 mb-1">
+            <Link href="/dashboard" className="hover:text-zinc-300 transition-colors">Dashboard</Link>
+            <span>/</span>
+            <span className="text-zinc-300">Mi barbería</span>
+          </div>
+          <h1 className="text-2xl font-bold">Configuración</h1>
+          <p className="text-zinc-500 text-sm mt-1">Edita la información pública de tu barbería.</p>
+        </div>
+
+        {loadingData ? (
+          <div className="flex justify-center py-20">
+            <div className="h-8 w-8 rounded-full border-2 border-zinc-700 border-t-gold animate-spin" />
+          </div>
+        ) : (
+          <form onSubmit={handleGuardar} className="flex flex-col gap-6">
+
+            {/* Sección — Información básica */}
+            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+                Información básica
+              </h2>
+              <div className="flex flex-col gap-4">
+
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">
+                    Nombre de la barbería <span className="text-gold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={form.nombre}
+                    onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
+                    placeholder="Ej: Barbería El Estilo"
+                    required
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Descripción</label>
+                  <textarea
+                    value={form.descripcion ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, descripcion: e.target.value }))}
+                    placeholder="Describe tu barbería, especialidades, ambiente..."
+                    rows={3}
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">URL del logo</label>
+                  <input
+                    type="url"
+                    value={form.logo_url ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, logo_url: e.target.value }))}
+                    placeholder="https://..."
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  />
+                  {form.logo_url && (
+                    <div className="mt-2 flex items-center gap-3">
+                      <img
+                        src={form.logo_url}
+                        alt="Logo preview"
+                        onError={(e) => (e.currentTarget.style.display = "none")}
+                        className="w-12 h-12 rounded-xl object-cover border border-zinc-700"
+                      />
+                      <span className="text-xs text-zinc-500">Vista previa</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Sección — Link público */}
+            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+                Link público
+              </h2>
+
+              <div>
+                <label className="block text-sm text-zinc-400 mb-1.5">
+                  URL de agendamiento <span className="text-gold">*</span>
+                </label>
+                <div className="flex items-center rounded-xl border border-zinc-700 bg-zinc-800 overflow-hidden focus-within:border-gold focus-within:ring-1 focus-within:ring-gold transition-colors">
+                  <span className="px-3 py-3 text-sm text-zinc-500 border-r border-zinc-700 shrink-0 select-none">
+                    /b/
+                  </span>
+                  <input
+                    type="text"
+                    value={form.slug}
+                    onChange={(e) => handleSlugChange(e.target.value)}
+                    placeholder="mi-barberia"
+                    className="flex-1 bg-transparent px-3 py-3 text-sm text-white placeholder-zinc-600 outline-none"
+                  />
+                </div>
+                {slugError ? (
+                  <p className="mt-1.5 text-xs text-red-400">{slugError}</p>
+                ) : form.slug ? (
+                  <p className="mt-1.5 text-xs text-zinc-500">
+                    Tu página:{" "}
+                    <span className="text-gold font-mono">{appUrl}/b/{form.slug}</span>
+                  </p>
+                ) : null}
+              </div>
+            </section>
+
+            {/* Sección — Contacto */}
+            <section className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+                Contacto y ubicación
+              </h2>
+              <div className="flex flex-col gap-4">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-zinc-400 mb-1.5">Teléfono / WhatsApp</label>
+                    <input
+                      type="tel"
+                      value={form.telefono ?? ""}
+                      onChange={(e) => setForm((f) => ({ ...f, telefono: e.target.value }))}
+                      placeholder="+57 300 000 0000"
+                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-zinc-400 mb-1.5">Email de contacto</label>
+                    <input
+                      type="email"
+                      value={form.email ?? ""}
+                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      placeholder="barberia@email.com"
+                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
+                  <input
+                    type="text"
+                    value={form.direccion ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, direccion: e.target.value }))}
+                    placeholder="Calle 10 # 5-20, Bogotá"
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Botón guardar */}
+            <div className="flex items-center justify-between">
+              <Link
+                href="/dashboard"
+                className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                ← Volver al dashboard
+              </Link>
+              <button
+                type="submit"
+                disabled={saving || !!slugError}
+                className="rounded-xl bg-gold px-6 py-3 text-sm font-semibold text-zinc-950 hover:bg-amber-400 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:scale-100"
+              >
+                {saving ? (
+                  <span className="flex items-center gap-2">
+                    <span className="h-4 w-4 rounded-full border-2 border-zinc-950/30 border-t-zinc-950 animate-spin" />
+                    Guardando...
+                  </span>
+                ) : (
+                  "Guardar cambios"
+                )}
+              </button>
+            </div>
+          </form>
+        )}
+      </main>
+
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 rounded-xl border px-5 py-3 text-sm font-medium shadow-xl ${
+              toast.tipo === "error"
+                ? "border-red-500/30 bg-zinc-900 text-red-400"
+                : "border-zinc-700 bg-zinc-900 text-white"
+            }`}
+          >
+            {toast.msg}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
