@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import SignOutButton from "@/components/SignOutButton";
 import type { Barberia } from "@/types/database";
+import { PAISES, getDepartamentos, getCiudades } from "@/lib/locations";
 
-type FormData = Pick<Barberia, "nombre" | "slug" | "descripcion" | "direccion" | "telefono" | "email" | "logo_url">;
+type FormData = Pick<Barberia, "nombre" | "slug" | "descripcion" | "pais" | "departamento" | "ciudad" | "direccion" | "telefono" | "email" | "logo_url">;
 
 export default function ConfiguracionPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function ConfiguracionPage() {
 
   const [barberia, setBarberia] = useState<Barberia | null>(null);
   const [form, setForm] = useState<FormData>({
-    nombre: "", slug: "", descripcion: "", direccion: "", telefono: "", email: "", logo_url: "",
+    nombre: "", slug: "", descripcion: "", pais: "CO", departamento: "", ciudad: "", direccion: "", telefono: "", email: "", logo_url: "",
   });
   const [userName, setUserName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -48,6 +49,9 @@ export default function ConfiguracionPage() {
         nombre: bar.nombre ?? "",
         slug: bar.slug ?? "",
         descripcion: bar.descripcion ?? "",
+        pais: bar.pais ?? "CO",
+        departamento: bar.departamento ?? "",
+        ciudad: bar.ciudad ?? "",
         direccion: bar.direccion ?? "",
         telefono: bar.telefono ?? "",
         email: bar.email ?? "",
@@ -123,6 +127,9 @@ export default function ConfiguracionPage() {
           nombre: form.nombre.trim(),
           slug: form.slug.trim(),
           descripcion: form.descripcion?.trim() || null,
+          pais: form.pais || null,
+          departamento: form.departamento || null,
+          ciudad: form.ciudad || null,
           direccion: form.direccion?.trim() || null,
           telefono: form.telefono?.trim() || null,
           email: form.email?.trim() || null,
@@ -333,6 +340,84 @@ export default function ConfiguracionPage() {
                 Contacto y ubicación
               </h2>
               <div className="flex flex-col gap-4">
+                {/* País */}
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">País</label>
+                  <select
+                    value={form.pais ?? "CO"}
+                    onChange={(e) => setForm((f) => ({ ...f, pais: e.target.value, departamento: "", ciudad: "" }))}
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  >
+                    {PAISES.map((p) => (
+                      <option key={p.codigo} value={p.codigo}>{p.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Departamento */}
+                  <div>
+                    <label className="block text-sm text-zinc-400 mb-1.5">Departamento / Estado</label>
+                    {getDepartamentos(form.pais ?? "").length > 0 ? (
+                      <select
+                        value={form.departamento ?? ""}
+                        onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      >
+                        <option value="">Selecciona un departamento</option>
+                        {getDepartamentos(form.pais ?? "").map((d) => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        value={form.departamento ?? ""}
+                        onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
+                        placeholder="Ej: Distrito Capital"
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      />
+                    )}
+                  </div>
+
+                  {/* Ciudad */}
+                  <div>
+                    <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                    {getCiudades(form.pais ?? "", form.departamento ?? "").length > 0 ? (
+                      <select
+                        value={form.ciudad ?? ""}
+                        onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      >
+                        <option value="">Selecciona una ciudad</option>
+                        {getCiudades(form.pais ?? "", form.departamento ?? "").map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        value={form.ciudad ?? ""}
+                        onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
+                        placeholder="Ej: Bogotá"
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Dirección */}
+                <div>
+                  <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
+                  <input
+                    type="text"
+                    value={form.direccion ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, direccion: e.target.value }))}
+                    placeholder="Calle 10 # 5-20"
+                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1.5">Teléfono / WhatsApp</label>
@@ -354,16 +439,6 @@ export default function ConfiguracionPage() {
                       className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
-                </div>
-                <div>
-                  <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
-                  <input
-                    type="text"
-                    value={form.direccion ?? ""}
-                    onChange={(e) => setForm((f) => ({ ...f, direccion: e.target.value }))}
-                    placeholder="Calle 10 # 5-20, Bogotá"
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-                  />
                 </div>
               </div>
             </section>

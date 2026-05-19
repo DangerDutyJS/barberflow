@@ -20,6 +20,9 @@ export interface Barberia {
   slug: string;
   descripcion: string | null;
   direccion: string | null;
+  pais: string | null;
+  departamento: string | null;
+  ciudad: string | null;
   telefono: string | null;
   email: string | null;
   logo_url: string | null;

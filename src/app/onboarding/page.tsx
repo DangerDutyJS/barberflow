@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import { PAISES, getDepartamentos, getCiudades } from "@/lib/locations";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -45,6 +46,9 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
 interface FormData {
   nombre: string;
   slug: string;
+  pais: string;
+  departamento: string;
+  ciudad: string;
   direccion: string;
   telefono: string;
   email: string;
@@ -67,6 +71,9 @@ export default function OnboardingPage() {
   const [form, setForm] = useState<FormData>({
     nombre: "",
     slug: "",
+    pais: "CO",
+    departamento: "",
+    ciudad: "",
     direccion: "",
     telefono: "",
     email: "",
@@ -125,12 +132,15 @@ export default function OnboardingPage() {
       const { data: barberia, error: bErr } = await supabase
         .from("barberias")
         .insert({
-          owner_id:   user.id,
-          nombre:     form.nombre.trim(),
-          slug:       form.slug.trim(),
-          direccion:  form.direccion.trim() || null,
-          telefono:   form.telefono.trim() || null,
-          email:      form.email.trim() || null,
+          owner_id:     user.id,
+          nombre:       form.nombre.trim(),
+          slug:         form.slug.trim(),
+          pais:         form.pais || null,
+          departamento: form.departamento || null,
+          ciudad:       form.ciudad || null,
+          direccion:    form.direccion.trim() || null,
+          telefono:     form.telefono.trim() || null,
+          email:        form.email.trim() || null,
         })
         .select()
         .single();
@@ -284,13 +294,84 @@ export default function OnboardingPage() {
                 </p>
 
                 <div className="flex flex-col gap-4">
+                  {/* País */}
+                  <div>
+                    <label className="block text-sm text-zinc-400 mb-1.5">País</label>
+                    <select
+                      value={form.pais}
+                      onChange={(e) => setForm((f) => ({ ...f, pais: e.target.value, departamento: "", ciudad: "" }))}
+                      className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                    >
+                      {PAISES.map((p) => (
+                        <option key={p.codigo} value={p.codigo}>{p.nombre}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Departamento */}
+                  {getDepartamentos(form.pais).length > 0 ? (
+                    <div>
+                      <label className="block text-sm text-zinc-400 mb-1.5">Departamento</label>
+                      <select
+                        value={form.departamento}
+                        onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      >
+                        <option value="">Selecciona un departamento</option>
+                        {getDepartamentos(form.pais).map((d) => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm text-zinc-400 mb-1.5">Departamento / Estado</label>
+                      <input
+                        type="text"
+                        value={form.departamento}
+                        onChange={(e) => setForm((f) => ({ ...f, departamento: e.target.value, ciudad: "" }))}
+                        placeholder="Ej: Distrito Capital"
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      />
+                    </div>
+                  )}
+
+                  {/* Ciudad */}
+                  {getCiudades(form.pais, form.departamento).length > 0 ? (
+                    <div>
+                      <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                      <select
+                        value={form.ciudad}
+                        onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      >
+                        <option value="">Selecciona una ciudad</option>
+                        {getCiudades(form.pais, form.departamento).map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm text-zinc-400 mb-1.5">Ciudad</label>
+                      <input
+                        type="text"
+                        value={form.ciudad}
+                        onChange={(e) => setForm((f) => ({ ...f, ciudad: e.target.value }))}
+                        placeholder="Ej: Bogotá"
+                        className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                      />
+                    </div>
+                  )}
+
+                  {/* Dirección */}
                   <div>
                     <label className="block text-sm text-zinc-400 mb-1.5">Dirección</label>
                     <input
                       type="text"
                       value={form.direccion}
                       onChange={(e) => set("direccion", e.target.value)}
-                      placeholder="Calle 123, Ciudad"
+                      placeholder="Calle 10 # 5-20"
                       className="w-full rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
                     />
                   </div>
