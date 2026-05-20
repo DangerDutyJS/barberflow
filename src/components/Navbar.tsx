@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Scissors, Menu, X } from "lucide-react";
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -20,7 +21,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl select-none">✂</span>
+            <Scissors className="w-6 h-6 text-gold" />
             <span className="text-xl font-bold tracking-tight">
               <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>
@@ -66,7 +67,7 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
             onClick={() => setOpen(!open)}
             className="md:hidden text-ink-2 hover:text-ink text-xl w-8 h-8 flex items-center justify-center"
           >
-            {open ? "✕" : "☰"}
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 

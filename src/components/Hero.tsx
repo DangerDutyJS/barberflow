@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import { Star, ArrowRight } from "lucide-react";
 
 interface HeroProps {
   isLoggedIn?: boolean;
@@ -103,7 +104,7 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
           {[
             { value: "500+", label: "Barberías activas" },
             { value: "10k+", label: "Citas por mes" },
-            { value: "4.9 ★", label: "Calificación promedio" },
+            { value: "4.9", label: "Calificación promedio", star: true },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -113,7 +114,9 @@ export default function Hero({ isLoggedIn = false }: HeroProps) {
               animate="visible"
               className="text-center"
             >
-              <div className="text-4xl font-bold text-ink mb-1">{stat.value}</div>
+              <div className="text-4xl font-bold text-ink mb-1 flex items-center justify-center gap-1">
+                {stat.value}{"star" in stat && stat.star && <Star className="w-6 h-6 text-gold fill-gold" />}
+              </div>
               <div className="text-sm text-ink-3">{stat.label}</div>
             </motion.div>
           ))}

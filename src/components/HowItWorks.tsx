@@ -1,5 +1,6 @@
 "use client";
 import { motion, type Variants } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const steps = [
   {
@@ -86,7 +87,7 @@ export default function HowItWorks() {
             className="inline-flex items-center gap-2 rounded-full bg-gold px-8 py-3.5 text-base font-semibold text-zinc-950 hover:bg-gold-light transition-all hover:scale-105 shadow-lg shadow-gold/20"
           >
             Crear cuenta gratis
-            <span>→</span>
+            <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
       </div>

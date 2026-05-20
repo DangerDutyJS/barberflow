@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import { Check } from "lucide-react";
 
 const plans = [
   {
@@ -112,7 +113,7 @@ export default function Pricing({ isLoggedIn = false }: { isLoggedIn?: boolean }
               <ul className="mb-8 space-y-3">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-sm text-ink-2">
-                    <span className="text-gold font-bold flex-shrink-0">✓</span>
+                    <Check className="w-4 h-4 text-gold flex-shrink-0" />
                     {f}
                   </li>
                 ))}

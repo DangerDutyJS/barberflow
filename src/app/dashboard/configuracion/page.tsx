@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import SignOutButton from "@/components/SignOutButton";
 import type { Barberia } from "@/types/database";
 import { PAISES, getDepartamentos, getCiudades } from "@/lib/locations";
+import { Scissors } from "lucide-react";
 
 type FormData = Pick<Barberia, "nombre" | "slug" | "descripcion" | "pais" | "departamento" | "ciudad" | "direccion" | "telefono" | "email" | "logo_url">;
 
@@ -161,7 +162,7 @@ export default function ConfiguracionPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl">✂</span>
+              <Scissors className="w-5 h-5 text-gold" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
@@ -255,7 +256,7 @@ export default function ConfiguracionPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-2xl">✂</span>
+                        <Scissors className="w-7 h-7 text-gold" />
                       )}
                     </div>
 

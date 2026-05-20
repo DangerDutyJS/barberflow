@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { PAISES, getDepartamentos, getCiudades } from "@/lib/locations";
+import { Scissors, Check } from "lucide-react";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -204,7 +205,7 @@ export default function OnboardingPage() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <span className="text-2xl">✂</span>
+          <Scissors className="w-6 h-6 text-gold" />
           <span className="text-2xl font-bold tracking-tight">
             <span className="text-ink">Barber</span>
             <span className="text-gold">Flow</span>
@@ -231,7 +232,7 @@ export default function OnboardingPage() {
               >
                 <p className="text-sm text-gold font-semibold uppercase tracking-widest mb-2">Paso 1 de 2</p>
                 <h1 className="text-2xl font-bold mb-1">
-                  {userName ? `Hola, ${userName} 👋` : "Bienvenido 👋"}
+                  {userName ? `Hola, ${userName}` : "Bienvenido"}
                 </h1>
                 <p className="text-ink-2 text-sm mb-7">
                   Vamos a configurar tu barbería en menos de 2 minutos.
@@ -455,7 +456,7 @@ export default function OnboardingPage() {
                   transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
                   className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold bg-gold/10"
                 >
-                  <span className="text-4xl">✓</span>
+                  <Check className="w-10 h-10 text-gold" />
                 </motion.div>
 
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUp, Scissors, Smartphone, PlusCircle, MoreHorizontal, Square } from "lucide-react";
 
 const STORAGE_KEY = "bf_install_tutorial_v1";
 
@@ -37,7 +38,7 @@ function IOSShareDiagram() {
           transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
           className="relative w-8 h-8 rounded-xl bg-gold/20 border-2 border-gold flex items-center justify-center"
         >
-          <span className="text-gold text-base">⬆</span>
+          <ArrowUp className="w-4 h-4 text-gold" />
           {/* Pulse ring */}
           <motion.div
             animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
@@ -45,8 +46,8 @@ function IOSShareDiagram() {
             className="absolute inset-0 rounded-xl border border-gold"
           />
         </motion.div>
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">⧉</div>
-        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3 text-xs">⋯</div>
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3"><Square className="w-3 h-3" /></div>
+        <div className="w-6 h-6 rounded-md bg-zinc-700 flex items-center justify-center text-ink-3"><MoreHorizontal className="w-3 h-3" /></div>
       </div>
 
       {/* Arrow + label */}
@@ -115,7 +116,7 @@ function DesktopInstallDiagram() {
           transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
           className="relative w-7 h-7 rounded-lg bg-gold/20 border-2 border-gold flex items-center justify-center"
         >
-          <span className="text-gold text-sm">⊕</span>
+          <PlusCircle className="w-4 h-4 text-gold" />
           <motion.div
             animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
             transition={{ repeat: Infinity, duration: 1.4 }}
@@ -214,7 +215,7 @@ export default function InstallTutorial() {
             className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-line bg-card p-8"
           >
             <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="text-2xl">✂</span>
+              <Scissors className="w-6 h-6 text-gold" />
               <span className="text-xl font-bold">
                 <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
@@ -224,9 +225,9 @@ export default function InstallTutorial() {
             <motion.div
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ repeat: 2, duration: 0.6, delay: 0.4 }}
-              className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gold/10 border border-gold/30 text-4xl"
+              className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-gold/10 border border-gold/30"
             >
-              📲
+              <Smartphone className="w-10 h-10 text-gold" />
             </motion.div>
 
             <h2 className="text-lg font-bold text-ink text-center mb-2">
@@ -250,13 +251,13 @@ export default function InstallTutorial() {
               <>
                 <DesktopInstallDiagram />
                 <p className="text-xs text-ink-3 text-center mt-3 mb-4">
-                  Haz clic en el ícono <span className="text-gold font-bold">⊕</span> en la barra de direcciones
+                  Haz clic en el ícono <PlusCircle className="inline w-4 h-4 text-gold align-text-bottom" /> en la barra de direcciones
                 </p>
                 <button
                   onClick={finish}
                   className="w-full rounded-xl bg-chip border border-line-2 py-3.5 text-sm font-semibold text-ink hover:border-gold hover:text-gold transition-all mb-3"
                 >
-                  Ya la instalé ✓
+                  Ya la instalé
                 </button>
               </>
             )}
@@ -276,7 +277,7 @@ export default function InstallTutorial() {
       title: "Instala BarberFlow en tu iPhone",
       desc: "Agrégala a tu pantalla de inicio para usarla como una app real, sin abrir Safari cada vez.",
       visual: (
-        <div className="text-5xl mx-auto w-fit">📱</div>
+        <Smartphone className="w-12 h-12 text-gold mx-auto" />
       ),
       btn: "Empezar →",
     },
@@ -309,7 +310,7 @@ export default function InstallTutorial() {
             </motion.span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-700 flex items-center justify-center text-2xl border border-gold/30">✂</div>
+            <div className="w-14 h-14 rounded-2xl bg-zinc-700 flex items-center justify-center border border-gold/30"><Scissors className="w-7 h-7 text-gold" /></div>
             <span className="text-sm text-ink font-medium">BarberFlow</span>
             <span className="text-xs text-ink-3">barber-rylax.vercel.app</span>
           </div>
@@ -338,7 +339,7 @@ export default function InstallTutorial() {
           className="w-full max-w-sm sm:rounded-2xl rounded-t-2xl border border-line bg-card p-8"
         >
           <div className="flex items-center justify-center gap-2 mb-6">
-            <span className="text-2xl">✂</span>
+            <Scissors className="w-6 h-6 text-gold" />
             <span className="text-xl font-bold">
               <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>

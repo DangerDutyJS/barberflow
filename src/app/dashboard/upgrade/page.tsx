@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
 import { PLANES_WOMPI, type PlanKey } from "@/lib/wompi";
 import type { Suscripcion } from "@/types/database";
+import { Scissors, Check } from "lucide-react";
 
 interface PlanCardProps {
   planKey: PlanKey;
@@ -74,7 +75,7 @@ function PlanCard({ planKey, suscripcion, onSelect, loading, selectedKey }: Plan
           "Soporte prioritario",
         ].map((feat) => (
           <li key={feat} className="flex items-center gap-2">
-            <span className="text-gold text-xs">✓</span>
+            <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />
             {feat}
           </li>
         ))}
@@ -175,7 +176,7 @@ export default function UpgradePage() {
       <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
         <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl">✂</span>
+            <Scissors className="w-5 h-5 text-gold" />
             <span className="text-lg font-bold">
               <span className="text-ink">Barber</span>
               <span className="text-gold">Flow</span>

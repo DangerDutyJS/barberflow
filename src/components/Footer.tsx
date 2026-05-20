@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Scissors } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -15,7 +16,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-10">
           <div className="max-w-xs">
             <Link href="/" className="flex items-center gap-2 mb-3">
-              <span className="text-xl select-none">✂</span>
+              <Scissors className="w-5 h-5 text-gold" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>

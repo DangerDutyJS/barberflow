@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import SignOutButton from "@/components/SignOutButton";
 import type { Barbero } from "@/types/database";
+import { Scissors, X } from "lucide-react";
 
 // ── Avatar ────────────────────────────────────────────────────────────────────
 
@@ -76,9 +77,9 @@ function BarberoModal({ barbero, onClose, onSave, saving }: ModalProps) {
           </h2>
           <button
             onClick={onClose}
-            className="text-ink-3 hover:text-ink transition-colors text-xl leading-none"
+            className="text-ink-3 hover:text-ink transition-colors"
           >
-            ×
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -353,7 +354,7 @@ export default function BarberosPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl">✂</span>
+              <Scissors className="w-5 h-5 text-gold" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
@@ -414,7 +415,7 @@ export default function BarberosPage() {
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center py-20 text-center"
           >
-            <div className="text-5xl mb-4">✂</div>
+            <div className="mb-4 text-ink-3"><Scissors className="w-12 h-12 mx-auto" /></div>
             <h3 className="text-lg font-semibold mb-2">Sin barberos aún</h3>
             <p className="text-ink-3 text-sm mb-6 max-w-xs">
               Agrega a tu equipo para empezar a gestionar citas y asignar servicios.

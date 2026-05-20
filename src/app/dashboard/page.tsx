@@ -7,6 +7,7 @@ import SignOutButton from "@/components/SignOutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
 import type { Suscripcion } from "@/types/database";
+import { Scissors, Calendar, BarChart2, Users, Star, Clock, TrendingUp, Settings } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -54,7 +55,7 @@ export default async function DashboardPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl">✂</span>
+              <Scissors className="w-5 h-5 text-gold" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-ink">Barber</span>
                 <span className="text-gold">Flow</span>
@@ -116,7 +117,7 @@ export default async function DashboardPage() {
         {/* Bienvenida */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-1">
-            Bienvenido, <span className="text-gold">{nombre.split(" ")[0]}</span> 👋
+            Bienvenido, <span className="text-gold">{nombre.split(" ")[0]}</span>
           </h1>
           <p className="text-ink-3 text-sm">
             Panel de control · <span className="text-ink-2">{barberia.nombre}</span>
@@ -126,12 +127,12 @@ export default async function DashboardPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Citas hoy",        value: citasHoy      ?? 0, icon: "📅", color: "text-blue-400"   },
-            { label: "Total citas",      value: totalCitas    ?? 0, icon: "📊", color: "text-purple-400" },
-            { label: "Barberos activos", value: totalBarberos ?? 0, icon: "👥", color: "text-green-400"  },
+            { label: "Citas hoy",        value: citasHoy      ?? 0, icon: <Calendar className="w-6 h-6 text-blue-400" />,   color: "text-blue-400"   },
+            { label: "Total citas",      value: totalCitas    ?? 0, icon: <BarChart2 className="w-6 h-6 text-purple-400" />, color: "text-purple-400" },
+            { label: "Barberos activos", value: totalBarberos ?? 0, icon: <Users className="w-6 h-6 text-green-400" />,      color: "text-green-400"  },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-line bg-card p-5">
-              <div className="text-2xl mb-2">{s.icon}</div>
+              <div className="mb-2">{s.icon}</div>
               <div className={`text-2xl font-bold mb-0.5 ${s.color}`}>{s.value}</div>
               <div className="text-xs text-ink-3">{s.label}</div>
             </div>
@@ -142,7 +143,7 @@ export default async function DashboardPage() {
             href="/dashboard/upgrade"
             className="group rounded-2xl border border-line bg-card p-5 transition-all hover:border-gold/40"
           >
-            <div className="text-2xl mb-2">⭐</div>
+            <div className="mb-2"><Star className="w-6 h-6 text-gold" /></div>
             <div className={`text-2xl font-bold mb-0.5 ${estadoSub.expirada && !estadoSub.esPro ? "text-red-400" : "text-gold"}`}>
               {estadoSub.esPro
                 ? "Pro"
@@ -190,17 +191,17 @@ export default async function DashboardPage() {
         <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-4">Acciones rápidas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {[
-            { icon: "📅", title: "Nueva cita",       desc: "Agenda una cita manualmente",    href: "/dashboard/citas/nueva",   soon: false },
-            { icon: "👥", title: "Mis barberos",      desc: "Gestiona tu equipo",             href: "/dashboard/barberos",      soon: false },
-            { icon: "✂",  title: "Servicios",        desc: "Precios y duración de cortes",   href: "/dashboard/servicios",     soon: false },
-            { icon: "🕐", title: "Horarios",          desc: "Configura disponibilidad",       href: "/dashboard/horarios",      soon: true  },
-            { icon: "📈", title: "Reportes",          desc: "Ingresos y estadísticas",        href: "/dashboard/reportes",      soon: true  },
-            { icon: "⚙",  title: "Mi barbería",      desc: "Editar info y perfil",           href: "/dashboard/configuracion", soon: false },
+            { icon: <Calendar className="w-6 h-6" />,    title: "Nueva cita",  desc: "Agenda una cita manualmente",  href: "/dashboard/citas/nueva",   soon: false },
+            { icon: <Users className="w-6 h-6" />,       title: "Mis barberos", desc: "Gestiona tu equipo",          href: "/dashboard/barberos",      soon: false },
+            { icon: <Scissors className="w-6 h-6" />,    title: "Servicios",   desc: "Precios y duración de cortes", href: "/dashboard/servicios",     soon: false },
+            { icon: <Clock className="w-6 h-6" />,       title: "Horarios",    desc: "Configura disponibilidad",     href: "/dashboard/horarios",      soon: true  },
+            { icon: <TrendingUp className="w-6 h-6" />,  title: "Reportes",    desc: "Ingresos y estadísticas",      href: "/dashboard/reportes",      soon: true  },
+            { icon: <Settings className="w-6 h-6" />,    title: "Mi barbería", desc: "Editar info y perfil",         href: "/dashboard/configuracion", soon: false },
           ].map((a) => (
             a.soon ? (
               <div key={a.title} className="group rounded-2xl border border-line bg-card p-5 opacity-50">
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-2xl">{a.icon}</span>
+                  <span className="text-ink-3">{a.icon}</span>
                   <span className="rounded-full bg-chip px-2 py-0.5 text-xs text-ink-3">Próximamente</span>
                 </div>
                 <h3 className="font-semibold mb-1 text-sm">{a.title}</h3>
@@ -209,7 +210,7 @@ export default async function DashboardPage() {
             ) : (
               <Link key={a.title} href={a.href} className="group rounded-2xl border border-line bg-card p-5 transition-all hover:border-gold/40">
                 <div className="flex items-start justify-between mb-3">
-                  <span className="text-2xl">{a.icon}</span>
+                  <span className="text-ink-2 group-hover:text-gold transition-colors">{a.icon}</span>
                 </div>
                 <h3 className="font-semibold mb-1 text-sm group-hover:text-gold transition-colors">{a.title}</h3>
                 <p className="text-xs text-ink-3">{a.desc}</p>

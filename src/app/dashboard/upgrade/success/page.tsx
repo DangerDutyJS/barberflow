@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { PLANES_WOMPI, type PlanKey } from "@/lib/wompi";
+import { Scissors, Check, Hourglass } from "lucide-react";
 
 type Estado = "verificando" | "confirmado" | "pendiente";
 
@@ -64,7 +65,7 @@ function UpgradeSuccessContent() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(212,168,83,0.07),transparent)] pointer-events-none" />
 
       <Link href="/" className="flex items-center gap-2 mb-10">
-        <span className="text-2xl">✂</span>
+        <Scissors className="w-6 h-6 text-gold" />
         <span className="text-2xl font-bold">
           <span className="text-ink">Barber</span>
           <span className="text-gold">Flow</span>
@@ -88,7 +89,7 @@ function UpgradeSuccessContent() {
               transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
               className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold bg-gold/10"
             >
-              <span className="text-4xl">✓</span>
+              <Check className="w-10 h-10 text-gold" />
             </motion.div>
             <h1 className="text-2xl font-bold mb-2">¡Plan activado!</h1>
             <p className="text-ink-2 text-sm mb-1">
@@ -111,7 +112,7 @@ function UpgradeSuccessContent() {
         {estado === "pendiente" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-zinc-600 bg-chip">
-              <span className="text-4xl">⏳</span>
+              <Hourglass className="w-10 h-10 text-zinc-400" />
             </div>
             <h1 className="text-xl font-bold mb-2">Pago en procesamiento</h1>
             <p className="text-ink-2 text-sm mb-6">

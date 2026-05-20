@@ -1,39 +1,41 @@
 "use client";
 import { motion, type Variants } from "framer-motion";
+import { Calendar, BarChart2, CreditCard, Users, Bell, Lock } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const features = [
+const features: { icon: LucideIcon; title: string; description: string }[] = [
   {
-    icon: "📅",
+    icon: Calendar,
     title: "Agendamiento 24/7",
     description:
       "Tus clientes reservan su cita en cualquier momento desde celular, tablet o computador. Sin llamadas, sin esperas.",
   },
   {
-    icon: "📊",
+    icon: BarChart2,
     title: "Dashboard en tiempo real",
     description:
       "Visualiza citas, ingresos y clientes activos en un panel limpio y moderno, actualizado al instante con Supabase Realtime.",
   },
   {
-    icon: "💳",
+    icon: CreditCard,
     title: "Pagos integrados",
     description:
       "Acepta pagos online y gestiona suscripciones mensuales o anuales. Reduce las ausencias y asegura tus ingresos.",
   },
   {
-    icon: "👥",
+    icon: Users,
     title: "Multi-barbero",
     description:
       "Administra múltiples barberos, horarios y sillas desde un solo panel centralizado. Escala sin límites.",
   },
   {
-    icon: "🔔",
+    icon: Bell,
     title: "Notificaciones automáticas",
     description:
       "Recordatorios de cita por email o SMS. Reduce las ausencias hasta un 60% y mejora la experiencia del cliente.",
   },
   {
-    icon: "🔐",
+    icon: Lock,
     title: "Autenticación segura",
     description:
       "Login con Google, email o número de teléfono. Seguridad de nivel enterprise con Supabase Auth.",
@@ -95,7 +97,7 @@ export default function Features() {
               variants={cardVariant}
               className="group rounded-2xl border border-line bg-card p-7 hover:border-gold/40 hover:bg-card/60 transition-colors duration-300 cursor-default"
             >
-              <div className="mb-4 text-3xl">{f.icon}</div>
+              <div className="mb-4 text-gold"><f.icon className="w-8 h-8" /></div>
               <h3 className="mb-2 text-lg font-semibold text-ink group-hover:text-gold transition-colors">
                 {f.title}
               </h3>

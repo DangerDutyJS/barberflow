@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import SignOutButton from "@/components/SignOutButton";
 import type { Servicio } from "@/types/database";
+import { Scissors, Banknote, Clock, ClipboardList, Search, X } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -78,7 +79,7 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold">{servicio ? "Editar servicio" : "Nuevo servicio"}</h2>
-          <button onClick={onClose} className="text-ink-3 hover:text-ink transition-colors text-xl leading-none">×</button>
+          <button onClick={onClose} className="text-ink-3 hover:text-ink transition-colors"><X className="w-5 h-5" /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -163,10 +164,10 @@ function ServicioModal({ servicio, onClose, onSave, saving }: ModalProps) {
 
 // ── Stat card ─────────────────────────────────────────────────────────────────
 
-function StatCard({ icon, label, value, sub }: { icon: string; label: string; value: string; sub?: string }) {
+function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string; sub?: string }) {
   return (
     <div className="rounded-2xl border border-line bg-card p-5">
-      <div className="text-2xl mb-2">{icon}</div>
+      <div className="mb-2 text-ink-2">{icon}</div>
       <div className="text-xl font-bold text-ink">{value}</div>
       <div className="text-xs text-ink-3 mt-0.5">{label}</div>
       {sub && <div className="text-xs text-ink-4 mt-1">{sub}</div>}
@@ -315,7 +316,7 @@ export default function ServiciosPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl">✂</span>
+              <Scissors className="w-5 h-5 text-gold" />
               <span className="text-lg font-bold tracking-tight">
                 <span className="text-ink">Barber</span><span className="text-gold">Flow</span>
               </span>
@@ -370,14 +371,14 @@ export default function ServiciosPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
               >
-                <StatCard icon="✂" label="Total servicios" value={String(stats.total)}
+                <StatCard icon={<Scissors className="w-6 h-6" />} label="Total servicios" value={String(stats.total)}
                   sub={`${stats.activos} activo${stats.activos !== 1 ? "s" : ""}`} />
-                <StatCard icon="💰" label="Precio promedio"
+                <StatCard icon={<Banknote className="w-6 h-6" />} label="Precio promedio"
                   value={stats.precioPromedio > 0 ? formatPrecio(stats.precioPromedio) : "—"}
                   sub={stats.precioMax > 0 ? `Máx ${formatPrecio(stats.precioMax)}` : undefined} />
-                <StatCard icon="🕐" label="Duración promedio"
+                <StatCard icon={<Clock className="w-6 h-6" />} label="Duración promedio"
                   value={stats.duracionPromedio > 0 ? formatDuracion(stats.duracionPromedio) : "—"} />
-                <StatCard icon="📋" label="Catálogo público"
+                <StatCard icon={<ClipboardList className="w-6 h-6" />} label="Catálogo público"
                   value={`${stats.activos} servicio${stats.activos !== 1 ? "s" : ""}`}
                   sub="visibles para clientes" />
               </motion.div>
@@ -388,7 +389,7 @@ export default function ServiciosPage() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center justify-center py-20 text-center"
               >
-                <div className="text-5xl mb-4">✂</div>
+                <div className="mb-4 text-ink-3"><Scissors className="w-12 h-12 mx-auto" /></div>
                 <h3 className="text-lg font-semibold mb-2">Sin servicios aún</h3>
                 <p className="text-ink-3 text-sm mb-6 max-w-xs">
                   Agrega los cortes y servicios que ofrece tu barbería con sus precios y tiempos.
@@ -404,7 +405,7 @@ export default function ServiciosPage() {
                 <div className="flex flex-col sm:flex-row gap-3 mb-4">
                   {/* Búsqueda */}
                   <div className="relative flex-1">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3 text-sm">🔍</span>
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3 w-4 h-4" />
                     <input
                       type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
                       placeholder="Buscar servicio..."
@@ -412,8 +413,8 @@ export default function ServiciosPage() {
                     />
                     {busqueda && (
                       <button onClick={() => setBusqueda("")}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink text-lg leading-none">
-                        ×
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink">
+                        <X className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -448,7 +449,7 @@ export default function ServiciosPage() {
                 {/* Sin resultados de búsqueda */}
                 {serviciosFiltrados.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="text-4xl mb-3">🔍</div>
+                    <div className="mb-3 text-ink-3"><Search className="w-10 h-10 mx-auto" /></div>
                     <p className="text-ink-3 text-sm">
                       No se encontraron servicios{busqueda ? ` para "${busqueda}"` : ""}.
                     </p>
@@ -484,7 +485,7 @@ export default function ServiciosPage() {
                                 </td>
                                 <td className="px-5 py-4 text-center">
                                   <span className="inline-flex items-center gap-1.5 rounded-lg bg-chip px-2.5 py-1 text-xs text-ink-2">
-                                    🕐 {formatDuracion(s.duracion_minutos)}
+                                    <Clock className="w-3.5 h-3.5" /> {formatDuracion(s.duracion_minutos)}
                                   </span>
                                 </td>
                                 <td className="px-5 py-4 text-right">

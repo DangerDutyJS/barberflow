@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
+import { Scissors } from "lucide-react";
 
 type Tab = "login" | "registro";
 
@@ -99,7 +100,7 @@ function LoginContent() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <span className="text-2xl">✂</span>
+          <Scissors className="w-6 h-6 text-gold" />
           <span className="text-2xl font-bold tracking-tight">
             <span className="text-ink">Barber</span>
             <span className="text-gold">Flow</span>
