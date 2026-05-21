@@ -29,8 +29,8 @@ const NAV_GROUPS = [
   {
     label: "Gestión",
     items: [
-      { href: "/dashboard/horarios",    label: "Horarios",     icon: Clock,     exact: false },
-      { href: "/dashboard/reportes",    label: "Reportes",     icon: BarChart2, exact: false },
+      { href: "/dashboard/horarios", label: "Horarios", icon: Clock,     exact: false },
+      { href: "/dashboard/reportes", label: "Reportes", icon: BarChart2, exact: false },
     ],
   },
   {
@@ -43,27 +43,26 @@ const NAV_GROUPS = [
 ];
 
 const BOTTOM_TABS = [
-  { href: "/dashboard",           label: "Inicio",    icon: LayoutDashboard, exact: true  },
-  { href: "/dashboard/citas",     label: "Citas",     icon: Calendar,        exact: false },
-  { href: "/dashboard/citas/nueva",label: "Nueva",   icon: Plus,            exact: true  },
-  { href: "/dashboard/barberos",  label: "Equipo",    icon: Users,           exact: false },
-  { href: "/dashboard/servicios", label: "Servicios", icon: Scissors,        exact: false },
+  { href: "/dashboard",            label: "Inicio",   icon: LayoutDashboard, exact: true  },
+  { href: "/dashboard/citas",      label: "Citas",    icon: Calendar,        exact: false },
+  { href: "/dashboard/citas/nueva",label: "Nueva",    icon: Plus,            exact: true,  fab: true },
+  { href: "/dashboard/barberos",   label: "Equipo",   icon: Users,           exact: false },
+  { href: "/dashboard/servicios",  label: "Servicios",icon: Scissors,        exact: false },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function isActive(pathname: string, href: string, exact: boolean) {
-  if (exact) return pathname === href;
-  return pathname === href || pathname.startsWith(href + "/");
+function isActive(p: string, href: string, exact: boolean) {
+  return exact ? p === href : (p === href || p.startsWith(href + "/"));
 }
 
 function getInitials(name: string) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((n) => n[0]).join("").toUpperCase() || "?";
 }
 
-// ── Sidebar nav link ──────────────────────────────────────────────────────────
+// ── Sidebar nav item ──────────────────────────────────────────────────────────
 
-function NavLink({
+function NavItem({
   href, label, Icon, active, onClick,
 }: {
   href: string; label: string; Icon: React.ElementType; active: boolean; onClick?: () => void;
@@ -73,14 +72,14 @@ function NavLink({
       href={href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all",
         active
-          ? "bg-accent text-accent-foreground"
-          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+          ? "bg-secondary text-foreground"
+          : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
       )}
     >
       <Icon className="h-4 w-4 shrink-0" />
-      {label}
+      <span>{label}</span>
     </Link>
   );
 }
@@ -93,7 +92,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const supabase = createClient();
 
   const [barberiaNombre, setBarberiaNombre] = useState("");
-  const [barberiaId,     setBarberiaId]     = useState("");
   const [userName,       setUserName]       = useState("");
   const [userEmail,      setUserEmail]      = useState("");
   const [avatarUrl,      setAvatarUrl]      = useState<string | null>(null);
@@ -110,7 +108,6 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       const { data: bar } = await supabase
         .from("barberias").select("id, nombre").eq("owner_id", user.id).single();
       if (!bar) return;
-      setBarberiaId(bar.id);
       setBarberiaNombre(bar.nombre);
       const { data: sub } = await supabase
         .from("suscripciones").select("*").eq("barberia_id", bar.id).single();
@@ -128,28 +125,42 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const estado   = getEstadoSuscripcion(suscripcion);
   const initials = getInitials(userName);
 
-  // ── Sidebar content (shared between desktop and mobile drawer) ──────────────
-  function SidebarContent({ onNav }: { onNav?: () => void }) {
+  // ── Avatar ──────────────────────────────────────────────────────────────────
+  function UserAvatar({ size = "h-8 w-8" }: { size?: string }) {
+    return avatarUrl ? (
+      <img src={avatarUrl} alt={userName} className={`${size} rounded-full object-cover shrink-0`} />
+    ) : (
+      <div className={`${size} shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary`}>
+        {initials}
+      </div>
+    );
+  }
+
+  // ── Sidebar nav content (shared desktop + mobile) ────────────────────────────
+  function SidebarNav({ onNav }: { onNav?: () => void }) {
     return (
-      <div className="flex h-full flex-col">
+      <div className="flex h-full flex-col overflow-hidden">
+
         {/* Logo */}
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/dashboard" className="flex items-center gap-2 font-semibold" onClick={onNav}>
-            <Scissors className="h-5 w-5 text-primary" />
-            <span>BarberFlow</span>
+        <div className="flex h-16 shrink-0 items-center border-b px-6">
+          <Link href="/dashboard" onClick={onNav} className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
+              <Scissors className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="font-bold text-base">BarberFlow</span>
           </Link>
         </div>
 
         {/* Nav */}
-        <div className="flex-1 overflow-auto py-4">
-          <nav className="grid items-start gap-px px-2 text-sm font-medium lg:px-4">
-            {NAV_GROUPS.map((group) => (
-              <div key={group.label} className="mb-4">
-                <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
-                  {group.label}
-                </p>
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label}>
+              <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                {group.label}
+              </p>
+              <div className="space-y-0.5">
                 {group.items.map((item) => (
-                  <NavLink
+                  <NavItem
                     key={item.href}
                     href={item.href}
                     label={item.label}
@@ -159,29 +170,29 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   />
                 ))}
               </div>
-            ))}
-          </nav>
-        </div>
+            </div>
+          ))}
+        </nav>
 
-        {/* Upgrade banner */}
+        {/* Upgrade card */}
         {!estado.esPro && (
-          <div className="px-4 pb-3">
-            <div className="rounded-lg border bg-card p-3">
+          <div className="shrink-0 px-4 pb-3">
+            <div className="rounded-lg border bg-card p-3 space-y-2">
               <div className="flex items-start gap-2">
-                <Star className="mt-px h-4 w-4 shrink-0 text-primary" />
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold">
-                    {estado.esTrial ? `Trial · ${estado.diasRestantes} días` : "Plan gratuito"}
+                <Star className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <div>
+                  <p className="text-xs font-semibold leading-tight">
+                    {estado.esTrial ? `Trial · ${estado.diasRestantes} días restantes` : "Plan gratuito"}
                   </p>
                   <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">
-                    Desbloquea todo con Pro
+                    Desbloquea funciones Pro
                   </p>
                 </div>
               </div>
               <Link
                 href="/dashboard/upgrade"
                 onClick={onNav}
-                className="mt-3 flex w-full items-center justify-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="flex w-full items-center justify-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 Upgrade a Pro <ChevronRight className="h-3 w-3" />
               </Link>
@@ -189,30 +200,22 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           </div>
         )}
 
-        {/* User */}
-        <div className="border-t p-4">
+        {/* User row */}
+        <div className="shrink-0 border-t px-4 py-3">
           <div className="flex items-center gap-3">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt={userName} className="h-8 w-8 rounded-full object-cover shrink-0" />
-            ) : (
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
-                {initials}
-              </div>
-            )}
+            <UserAvatar />
             <div className="flex-1 min-w-0">
               <p className="truncate text-sm font-medium leading-tight">{userName || "Usuario"}</p>
               <p className="truncate text-xs text-muted-foreground leading-tight">{userEmail}</p>
             </div>
-            <div className="flex items-center gap-1">
-              <ThemeToggle />
-              <button
-                onClick={handleSignOut}
-                title="Cerrar sesión"
-                className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </div>
+            <ThemeToggle />
+            <button
+              onClick={handleSignOut}
+              title="Cerrar sesión"
+              className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>
@@ -220,106 +223,106 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
+    <div className="flex min-h-screen bg-background text-foreground">
 
-      {/* ── Desktop Sidebar ──────────────────────────────────────────────────── */}
-      <div className="hidden border-r bg-muted/40 md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2 sticky top-0">
-          <SidebarContent />
-        </div>
-      </div>
+      {/* ── Desktop Sidebar (fixed left) ──────────────────────────────────────── */}
+      <aside className="hidden md:flex md:w-[220px] lg:w-[240px] shrink-0 flex-col border-r bg-card fixed inset-y-0 left-0 z-30">
+        <SidebarNav />
+      </aside>
 
-      {/* ── Right side: header + content ────────────────────────────────────── */}
-      <div className="flex flex-col">
+      {/* ── Content area (offset by sidebar width on desktop) ─────────────────── */}
+      <div className="flex flex-1 flex-col md:pl-[220px] lg:pl-[240px]">
 
-        {/* ── Mobile / Tablet top header ──────────────────────────────────────── */}
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:hidden">
-          {/* Mobile drawer trigger */}
+        {/* ── Mobile header ───────────────────────────────────────────────────── */}
+        <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-4 border-b bg-card px-4 md:hidden">
           <button
             onClick={() => setMobileOpen(true)}
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
           >
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Menú</span>
           </button>
-
-          <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-            <Scissors className="h-5 w-5 text-primary" />
-            <span>BarberFlow</span>
+          <Link href="/dashboard" className="flex items-center gap-2 font-bold">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary">
+              <Scissors className="h-3.5 w-3.5 text-primary-foreground" />
+            </div>
+            BarberFlow
           </Link>
-
           <div className="ml-auto flex items-center gap-2">
             <ThemeToggle />
-            {avatarUrl ? (
-              <img src={avatarUrl} alt={userName} className="h-8 w-8 rounded-full object-cover" />
-            ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
-                {initials}
+            <UserAvatar />
+          </div>
+        </header>
+
+        {/* ── Desktop page header ─────────────────────────────────────────────── */}
+        <header className="sticky top-0 z-20 hidden md:flex h-14 shrink-0 items-center justify-between border-b bg-card px-6">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">{barberiaNombre || "Dashboard"}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <div className="flex items-center gap-2 pl-2 border-l">
+              <UserAvatar />
+              <div className="hidden lg:block">
+                <p className="text-sm font-medium leading-tight">{userName}</p>
+                <p className="text-xs text-muted-foreground leading-tight">{userEmail}</p>
               </div>
-            )}
+            </div>
           </div>
         </header>
 
-        {/* Desktop top bar (visible only on md+) */}
-        <header className="hidden md:flex h-[60px] items-center gap-4 border-b bg-muted/40 px-4 lg:px-6">
-          <div className="ml-auto flex items-center gap-2">
-            {barberiaNombre && (
-              <span className="text-sm text-muted-foreground hidden lg:block">{barberiaNombre}</span>
-            )}
+        {/* ── Main content ──────────────────────────────────────────────────────── */}
+        <main className="flex-1 px-4 py-6 md:px-6 md:py-8 pb-24 md:pb-8">
+          <div className="mx-auto w-full max-w-5xl">
+            {children}
           </div>
-        </header>
-
-        {/* ── Page content ─────────────────────────────────────────────────── */}
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 pb-24 md:pb-6">
-          {children}
         </main>
       </div>
 
-      {/* ── Mobile bottom nav ────────────────────────────────────────────────── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur-md md:hidden">
-        <div className="flex h-16 items-center">
+      {/* ── Mobile bottom nav ─────────────────────────────────────────────────── */}
+      <nav className="fixed bottom-0 inset-x-0 z-40 border-t bg-card md:hidden">
+        <div className="flex h-16 items-end pb-1">
           {BOTTOM_TABS.map((tab) => {
             const active = isActive(pathname, tab.href, tab.exact);
             const Icon   = tab.icon;
-            const isNew  = tab.href === "/dashboard/citas/nueva";
+            const isFab  = "fab" in tab && tab.fab;
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
                 className={cn(
-                  "flex flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
-                  isNew && "relative"
+                  "flex flex-1 flex-col items-center justify-end gap-1 pb-2 text-[10px] font-medium transition-colors",
+                  active ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                {isNew ? (
-                  <div className="flex h-10 w-10 -mt-5 items-center justify-center rounded-full bg-primary shadow-lg">
+                {isFab ? (
+                  <div className={cn(
+                    "flex h-11 w-11 -mt-4 items-center justify-center rounded-full shadow-md transition-colors",
+                    active ? "bg-primary/90" : "bg-primary"
+                  )}>
                     <Icon className="h-5 w-5 text-primary-foreground" />
                   </div>
                 ) : (
                   <Icon className="h-5 w-5" />
                 )}
-                <span className={cn("text-[10px]", isNew && "mt-0.5")}>{tab.label}</span>
+                <span>{tab.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
 
-      {/* ── Mobile Drawer ────────────────────────────────────────────────────── */}
+      {/* ── Mobile drawer (slide from left) ───────────────────────────────────── */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-72 bg-background border-r shadow-xl">
-            <div className="absolute right-4 top-4">
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="rounded-md p-1.5 text-muted-foreground hover:bg-accent transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <SidebarContent onNav={() => setMobileOpen(false)} />
+          <div className="absolute inset-y-0 left-0 w-[260px] bg-card border-r shadow-xl">
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground hover:bg-secondary transition-colors z-10"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <SidebarNav onNav={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
