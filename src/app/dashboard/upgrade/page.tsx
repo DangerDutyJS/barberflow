@@ -234,36 +234,6 @@ export default function UpgradePage() {
               />
             </div>
 
-            {/* Plan de prueba — solo para verificar que el flujo de pago real funciona */}
-            <div className="max-w-2xl mx-auto mt-6">
-              <div className="rounded-2xl border border-dashed border-blue-500/40 bg-blue-500/5 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold text-blue-400 uppercase tracking-widest mb-0.5">
-                    Plan de prueba · Solo para verificar pagos reales
-                  </p>
-                  <p className="font-bold text-lg">
-                    $10.000 <span className="text-sm font-normal text-ink-3">COP · 30 días</span>
-                  </p>
-                  <p className="text-xs text-ink-3 mt-0.5">
-                    Activa el plan Pro por 30 días — úsalo para testear Nequi, PSE y tarjetas con dinero real
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleSelect("prueba")}
-                  disabled={loading}
-                  className="shrink-0 rounded-xl border border-blue-500/40 bg-blue-500/10 px-5 py-2.5 text-sm font-semibold text-blue-300 hover:bg-blue-500/20 transition-all disabled:opacity-50 whitespace-nowrap"
-                >
-                  {loading && selectedKey === "prueba" ? (
-                    <span className="flex items-center gap-2">
-                      <span className="h-4 w-4 rounded-full border-2 border-blue-400/30 border-t-blue-400 animate-spin" />
-                      Procesando...
-                    </span>
-                  ) : (
-                    "Pagar $10.000 →"
-                  )}
-                </button>
-              </div>
-            </div>
           </>
         )}
 
