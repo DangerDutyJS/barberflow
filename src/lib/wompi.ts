@@ -3,6 +3,13 @@ import crypto from "crypto";
 export const WOMPI_CHECKOUT_URL = "https://checkout.wompi.co/p/";
 
 export const PLANES_WOMPI = {
+  prueba: {
+    label: "Prueba Real",
+    precioCOP: 10000,
+    centavos: 1000000,
+    ciclo: "mensual" as const,
+    dias: 30,
+  },
   pro_mensual: {
     label: "Pro Mensual",
     precioCOP: 49900,
