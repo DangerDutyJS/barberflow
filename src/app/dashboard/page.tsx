@@ -191,7 +191,7 @@ export default async function DashboardPage() {
         <h2 className="text-sm font-semibold text-ink-2 uppercase tracking-widest mb-4">Acciones rápidas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {[
-            { icon: <Calendar className="w-6 h-6" />,    title: "Nueva cita",  desc: "Agenda una cita manualmente",  href: "/dashboard/citas/nueva",   soon: false },
+            { icon: <Calendar className="w-6 h-6" />,    title: "Mis citas",   desc: "Ver y agendar citas",          href: "/dashboard/citas",         soon: false },
             { icon: <Users className="w-6 h-6" />,       title: "Mis barberos", desc: "Gestiona tu equipo",          href: "/dashboard/barberos",      soon: false },
             { icon: <Scissors className="w-6 h-6" />,    title: "Servicios",   desc: "Precios y duración de cortes", href: "/dashboard/servicios",     soon: false },
             { icon: <Clock className="w-6 h-6" />,       title: "Horarios",    desc: "Configura disponibilidad",     href: "/dashboard/horarios",      soon: true  },
