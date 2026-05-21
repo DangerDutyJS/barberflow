@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { CitaConRelaciones, EstadoCita } from "@/types/database";
 import {
   Scissors, Calendar, Clock, User, Plus, Check, X,
-  AlertCircle, Phone,
+  AlertCircle, Phone, ImageIcon,
 } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -101,6 +101,25 @@ function CitaCard({ cita, onEstado, actualizando, modoCompletadas }: CitaCardPro
 
         {cita.notas && (
           <p className="mt-2 text-xs text-ink-3 italic truncate">{cita.notas}</p>
+        )}
+
+        {cita.fotos_referencia && cita.fotos_referencia.length > 0 && (
+          <div className="mt-3">
+            <p className="flex items-center gap-1 text-xs text-ink-3 mb-1.5">
+              <ImageIcon className="w-3 h-3" /> Fotos de referencia
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {cita.fotos_referencia.map((url, i) => (
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={url}
+                    alt={`referencia ${i + 1}`}
+                    className="w-14 h-14 rounded-lg object-cover border border-line-2 hover:border-gold hover:scale-105 transition-all"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
