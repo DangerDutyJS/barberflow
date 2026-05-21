@@ -5,9 +5,11 @@ import { createServiceClient } from "@/lib/supabase/service";
 import Link from "next/link";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
 import type { Suscripcion } from "@/types/database";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
-  Calendar, BarChart2, Users, Star, Clock,
-  TrendingUp, Settings, Plus, Scissors, ChevronRight, AlertTriangle,
+  Calendar, BarChart2, Users, Star, Clock, Plus,
+  Scissors, ChevronRight, TrendingUp, Settings, AlertCircle,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -29,7 +31,6 @@ export default async function DashboardPage() {
     .single();
 
   const estadoSub = getEstadoSuscripcion(suscripcion as Suscripcion | null);
-
   const hoy = new Date().toISOString().split("T")[0];
 
   const [
@@ -54,235 +55,234 @@ export default async function DashboardPage() {
       .in("estado", ["pendiente", "confirmada"])
       .gte("fecha", hoy)
       .order("fecha").order("hora_inicio")
-      .limit(4),
+      .limit(5),
   ]);
 
   const nombre = user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario";
 
-  const diaLabel = new Date().toLocaleDateString("es-CO", {
-    weekday: "long", day: "numeric", month: "long",
-  });
-
   function formatHora(h: string) { return h.slice(0, 5); }
   function formatFecha(f: string) {
     if (f === hoy) return "Hoy";
-    const d = new Date(f + "T12:00:00");
-    return d.toLocaleDateString("es-CO", { weekday: "short", day: "numeric", month: "short" });
+    return new Date(f + "T12:00:00").toLocaleDateString("es-CO", {
+      weekday: "short", day: "numeric", month: "short",
+    });
   }
 
   const ACCIONES = [
-    { icon: Calendar,   title: "Citas",         desc: "Ver agenda del día",  href: "/dashboard/citas",         bg: "bg-blue-500/10",    border: "border-blue-500/20",   iconCls: "text-blue-400"   },
-    { icon: Plus,       title: "Nueva cita",    desc: "Agendar ahora",       href: "/dashboard/citas/nueva",   bg: "bg-emerald-500/10", border: "border-emerald-500/20",iconCls: "text-emerald-400"},
-    { icon: Users,      title: "Barberos",      desc: "Gestiona tu equipo",  href: "/dashboard/barberos",      bg: "bg-violet-500/10",  border: "border-violet-500/20", iconCls: "text-violet-400" },
-    { icon: Scissors,   title: "Servicios",     desc: "Precios y cortes",    href: "/dashboard/servicios",     bg: "bg-amber-500/10",   border: "border-amber-500/20",  iconCls: "text-amber-400"  },
-    { icon: Clock,      title: "Horarios",      desc: "Disponibilidad",      href: "/dashboard/horarios",      bg: "bg-cyan-500/10",    border: "border-cyan-500/20",   iconCls: "text-cyan-400"   },
-    { icon: TrendingUp, title: "Reportes",      desc: "Ingresos y stats",    href: "/dashboard/reportes",      bg: "bg-pink-500/10",    border: "border-pink-500/20",   iconCls: "text-pink-400"   },
-    { icon: Settings,   title: "Configuración", desc: "Perfil de barbería",  href: "/dashboard/configuracion", bg: "bg-zinc-500/10",    border: "border-zinc-500/20",   iconCls: "text-zinc-400"   },
-    { icon: Star,       title: "Upgrade",       desc: "Desbloquea todo",     href: "/dashboard/upgrade",       bg: "bg-gold/10",        border: "border-gold/20",       iconCls: "text-gold"       },
+    { icon: Calendar,   title: "Citas",         desc: "Ver agenda del día",  href: "/dashboard/citas"          },
+    { icon: Plus,       title: "Nueva cita",    desc: "Agendar manualmente", href: "/dashboard/citas/nueva"    },
+    { icon: Users,      title: "Barberos",      desc: "Gestiona tu equipo",  href: "/dashboard/barberos"       },
+    { icon: Scissors,   title: "Servicios",     desc: "Precios y duración",  href: "/dashboard/servicios"      },
+    { icon: Clock,      title: "Horarios",      desc: "Disponibilidad",      href: "/dashboard/horarios"       },
+    { icon: TrendingUp, title: "Reportes",      desc: "Ingresos y stats",    href: "/dashboard/reportes"       },
+    { icon: Settings,   title: "Configuración", desc: "Perfil de barbería",  href: "/dashboard/configuracion"  },
+    { icon: Star,       title: "Upgrade Pro",   desc: "Desbloquea todo",     href: "/dashboard/upgrade"        },
   ];
 
   return (
-    <div className="bg-base text-ink">
+    <div className="flex flex-col gap-6">
 
       {/* ── Trial / Expired banner ─────────────────────────────────────────── */}
       {estadoSub.mostrarBannerTrial && (
-        <div className={`flex items-center justify-center gap-2 px-4 py-2.5 text-sm ${
+        <div className={`flex items-center gap-2 rounded-lg border px-4 py-3 text-sm ${
           estadoSub.expirada
-            ? "bg-red-950/60 text-red-300 border-b border-red-900/40"
-            : estadoSub.diasRestantes !== null && estadoSub.diasRestantes <= 2
-            ? "bg-amber-950/60 text-amber-300 border-b border-amber-900/40"
-            : "bg-gold/8 text-ink-2 border-b border-gold/15"
+            ? "border-destructive/50 bg-destructive/10 text-destructive"
+            : "border-primary/30 bg-primary/5 text-foreground"
         }`}>
-          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-          {estadoSub.expirada ? (
-            <>Tu trial venció. <Link href="/dashboard/upgrade" className="font-bold underline underline-offset-2 ml-1">Activa tu plan →</Link></>
-          ) : (
-            <>Trial · <strong className="mx-1">{estadoSub.diasRestantes}d</strong> restante{estadoSub.diasRestantes !== 1 ? "s" : ""} —
-              <Link href="/dashboard/upgrade" className="font-bold underline underline-offset-2 ml-1">Upgrade a Pro →</Link>
-            </>
-          )}
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <span>
+            {estadoSub.expirada
+              ? "Tu período de prueba ha vencido."
+              : `Trial activo · ${estadoSub.diasRestantes} día${estadoSub.diasRestantes !== 1 ? "s" : ""} restante${estadoSub.diasRestantes !== 1 ? "s" : ""}.`}
+          </span>
+          <Link href="/dashboard/upgrade" className="ml-auto shrink-0 font-semibold underline underline-offset-2 hover:no-underline">
+            {estadoSub.expirada ? "Reactivar →" : "Upgrade a Pro →"}
+          </Link>
         </div>
       )}
 
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
-
-        {/* ── Greeting ──────────────────────────────────────────────────────── */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs text-ink-4 uppercase tracking-widest mb-1 capitalize">{diaLabel}</p>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Hola, <span className="text-gold">{nombre.split(" ")[0]}</span>
-            </h1>
-            <p className="text-ink-3 text-sm mt-0.5">{barberia.nombre}</p>
-          </div>
-          <Link
-            href="/dashboard/citas/nueva"
-            className="shrink-0 flex items-center gap-1.5 rounded-xl bg-gold px-4 py-2.5 text-sm font-bold text-zinc-950 hover:bg-amber-400 transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-gold/20"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden xs:inline">Nueva cita</span>
-            <span className="xs:hidden">Nueva</span>
-          </Link>
+      {/* ── Page header ───────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            Bienvenido, {nombre.split(" ")[0]} · {barberia.nombre}
+          </p>
         </div>
+        <Link
+          href="/dashboard/citas/nueva"
+          className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+        >
+          <Plus className="h-4 w-4" />
+          Nueva cita
+        </Link>
+      </div>
 
-        {/* ── Stats ─────────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard
-            icon={<Calendar className="w-5 h-5" />}
-            value={citasHoy ?? 0}
-            label="Citas hoy"
-            href="/dashboard/citas"
-            accent="blue"
-          />
-          <StatCard
-            icon={<Clock className="w-5 h-5" />}
-            value={citasPendientes ?? 0}
-            label="Pendientes"
-            href="/dashboard/citas"
-            accent="amber"
-          />
-          <StatCard
-            icon={<Users className="w-5 h-5" />}
-            value={totalBarberos ?? 0}
-            label="Barberos"
-            href="/dashboard/barberos"
-            accent="violet"
-          />
-          <StatCard
-            icon={<BarChart2 className="w-5 h-5" />}
-            value={totalCitas ?? 0}
-            label="Total citas"
-            href="/dashboard/reportes"
-            accent="emerald"
-          />
-        </div>
+      {/* ── Stats row ─────────────────────────────────────────────────────── */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Citas hoy"
+          value={citasHoy ?? 0}
+          description="Citas agendadas para hoy"
+          icon={<Calendar className="h-4 w-4 text-muted-foreground" />}
+          href="/dashboard/citas"
+        />
+        <StatCard
+          title="Pendientes"
+          value={citasPendientes ?? 0}
+          description="Por confirmar o completar"
+          icon={<Clock className="h-4 w-4 text-muted-foreground" />}
+          href="/dashboard/citas"
+        />
+        <StatCard
+          title="Barberos activos"
+          value={totalBarberos ?? 0}
+          description="Miembros del equipo"
+          icon={<Users className="h-4 w-4 text-muted-foreground" />}
+          href="/dashboard/barberos"
+        />
+        <StatCard
+          title="Total citas"
+          value={totalCitas ?? 0}
+          description="Historial completo"
+          icon={<BarChart2 className="h-4 w-4 text-muted-foreground" />}
+          href="/dashboard/reportes"
+        />
+      </div>
 
-        {/* ── Próximas citas ─────────────────────────────────────────────────── */}
-        {proximasCitas && proximasCitas.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs font-bold text-ink-3 uppercase tracking-widest">Próximas citas</h2>
-              <Link href="/dashboard/citas" className="flex items-center gap-0.5 text-xs text-gold hover:text-amber-400 transition-colors font-medium">
-                Ver todas <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-            <div className="rounded-2xl border border-line bg-card overflow-hidden divide-y divide-line/50">
-              {proximasCitas.map((c: {
-                id: string; fecha: string; hora_inicio: string; cliente_nombre: string | null; estado: string;
-                barbero: { nombre: string }[] | { nombre: string } | null;
-                servicio: { nombre: string }[] | { nombre: string } | null;
-              }) => {
-                const barberoN = Array.isArray(c.barbero) ? c.barbero[0]?.nombre : c.barbero?.nombre;
-                const servicioN = Array.isArray(c.servicio) ? c.servicio[0]?.nombre : c.servicio?.nombre;
-                const esHoy = c.fecha === hoy;
-                return (
-                  <div key={c.id} className="flex items-center gap-3 px-4 py-3 hover:bg-chip/30 transition-colors">
-                    {/* Hora */}
-                    <div className="shrink-0 w-14 text-center">
-                      <p className="text-[10px] text-ink-4 font-medium uppercase">{formatFecha(c.fecha)}</p>
-                      <p className={`text-sm font-bold ${esHoy ? "text-gold" : "text-ink-2"}`}>{formatHora(c.hora_inicio)}</p>
+      {/* ── Próximas citas + Acciones rápidas ─────────────────────────────── */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+
+        {/* Próximas citas */}
+        <Card className="lg:col-span-4">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-base">Próximas citas</CardTitle>
+            <Link
+              href="/dashboard/citas"
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Ver todas <ChevronRight className="h-3 w-3" />
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {proximasCitas && proximasCitas.length > 0 ? (
+              <div className="space-y-0">
+                {proximasCitas.map((c: {
+                  id: string; fecha: string; hora_inicio: string; cliente_nombre: string | null; estado: string;
+                  barbero: { nombre: string }[] | { nombre: string } | null;
+                  servicio: { nombre: string }[] | { nombre: string } | null;
+                }) => {
+                  const barberoN  = Array.isArray(c.barbero)  ? c.barbero[0]?.nombre  : c.barbero?.nombre;
+                  const servicioN = Array.isArray(c.servicio) ? c.servicio[0]?.nombre : c.servicio?.nombre;
+                  return (
+                    <div key={c.id} className="flex items-center gap-4 py-3 border-b last:border-0">
+                      <div className="w-12 shrink-0">
+                        <p className="text-[10px] text-muted-foreground uppercase font-medium">{formatFecha(c.fecha)}</p>
+                        <p className="text-sm font-bold text-primary">{formatHora(c.hora_inicio)}</p>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{c.cliente_nombre ?? "Sin nombre"}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {servicioN ?? "Servicio"}{barberoN ? ` · ${barberoN}` : ""}
+                        </p>
+                      </div>
+                      <Badge variant={c.estado === "confirmada" ? "info" : "warning"}>
+                        {c.estado === "confirmada" ? "Confirmada" : "Pendiente"}
+                      </Badge>
                     </div>
-                    {/* Divider */}
-                    <div className="w-px h-8 bg-line shrink-0" />
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate">{c.cliente_nombre ?? "Sin nombre"}</p>
-                      <p className="text-xs text-ink-3 truncate">
-                        {servicioN ?? "Servicio"}{barberoN ? ` · ${barberoN}` : ""}
-                      </p>
-                    </div>
-                    {/* Estado */}
-                    <div className={`shrink-0 w-2 h-2 rounded-full ${
-                      c.estado === "confirmada" ? "bg-blue-400" : "bg-amber-400"
-                    }`} />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <Calendar className="h-8 w-8 text-muted-foreground/40 mb-2" />
+                <p className="text-sm text-muted-foreground">No hay citas próximas</p>
+                <Link
+                  href="/dashboard/citas/nueva"
+                  className="mt-3 text-xs text-primary hover:underline"
+                >
+                  Agendar una cita →
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Acciones rápidas */}
+        <Card className="lg:col-span-3">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Acciones rápidas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              {ACCIONES.map((a) => (
+                <Link
+                  key={a.href}
+                  href={a.href}
+                  className="flex flex-col gap-2 rounded-lg border p-3 hover:bg-accent hover:border-accent-foreground/10 transition-colors group"
+                >
+                  <a.icon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <div>
+                    <p className="text-xs font-semibold leading-tight">{a.title}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5 hidden sm:block">{a.desc}</p>
                   </div>
-                );
-              })}
+                </Link>
+              ))}
             </div>
-          </section>
-        )}
+          </CardContent>
+        </Card>
+      </div>
 
-        {/* ── Acciones rápidas ───────────────────────────────────────────────── */}
-        <section>
-          <h2 className="text-xs font-bold text-ink-3 uppercase tracking-widest mb-3">Acciones rápidas</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {ACCIONES.map((a) => (
-              <Link
-                key={a.href}
-                href={a.href}
-                className={`group flex flex-col gap-3 rounded-2xl border ${a.border} ${a.bg} p-4 hover:scale-[1.02] active:scale-95 transition-all`}
-              >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${a.bg} border ${a.border}`}>
-                  <a.icon className={`w-4.5 h-4.5 ${a.iconCls}`} style={{ width: 18, height: 18 }} />
-                </div>
-                <div>
-                  <p className="font-semibold text-sm text-ink group-hover:text-inherit">{a.title}</p>
-                  <p className="text-[11px] text-ink-4 leading-snug mt-0.5">{a.desc}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Upgrade banner ─────────────────────────────────────────────────── */}
-        {!estadoSub.esPro && (
-          <div className={`rounded-2xl border p-5 flex flex-col sm:flex-row sm:items-center gap-4 ${
-            estadoSub.expirada ? "border-red-500/30 bg-red-950/20" : "border-gold/20 bg-gradient-to-br from-gold/8 to-transparent"
-          }`}>
-            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
-              estadoSub.expirada ? "bg-red-500/15" : "bg-gold/15"
-            }`}>
-              <Star className={`w-5 h-5 ${estadoSub.expirada ? "text-red-400" : "text-gold"}`} />
-            </div>
-            <div className="flex-1">
-              <p className="font-bold mb-0.5">
-                {estadoSub.expirada ? "Tu trial ha terminado" : estadoSub.esTrial ? `Trial activo · ${estadoSub.diasRestantes} días restantes` : "Plan gratuito"}
-              </p>
-              <p className="text-xs text-ink-3">Barberos ilimitados, reportes detallados y página pública de agendamiento.</p>
+      {/* ── Upgrade banner ────────────────────────────────────────────────── */}
+      {!estadoSub.esPro && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="flex flex-col sm:flex-row sm:items-center gap-4 p-6">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <Star className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-semibold text-sm">
+                  {estadoSub.expirada ? "Tu trial ha terminado" : estadoSub.esTrial ? `Trial activo · ${estadoSub.diasRestantes} días` : "Plan gratuito"}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Barberos ilimitados, reportes detallados y página pública de agendamiento.
+                </p>
+              </div>
             </div>
             <Link
               href="/dashboard/upgrade"
-              className={`shrink-0 rounded-xl px-5 py-2.5 text-sm font-bold text-center transition-all hover:scale-[1.02] active:scale-95 ${
-                estadoSub.expirada
-                  ? "bg-red-500 text-white hover:bg-red-400"
-                  : "bg-gold text-zinc-950 hover:bg-amber-400 shadow-lg shadow-gold/20"
-              }`}
+              className="shrink-0 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors text-center"
             >
-              {estadoSub.expirada ? "Reactivar →" : "Upgrade a Pro →"}
+              {estadoSub.expirada ? "Reactivar plan →" : "Upgrade a Pro →"}
             </Link>
-          </div>
-        )}
-      </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
 
-// ── Stat card component ───────────────────────────────────────────────────────
-
-const ACCENT_STYLES = {
-  blue:    { bg: "bg-blue-500/10",    border: "border-blue-500/20",    icon: "text-blue-400",    num: "text-blue-400"    },
-  amber:   { bg: "bg-amber-500/10",   border: "border-amber-500/20",   icon: "text-amber-400",   num: "text-amber-400"   },
-  violet:  { bg: "bg-violet-500/10",  border: "border-violet-500/20",  icon: "text-violet-400",  num: "text-violet-400"  },
-  emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/20", icon: "text-emerald-400", num: "text-emerald-400" },
-} as const;
+// ── Stat card ─────────────────────────────────────────────────────────────────
 
 function StatCard({
-  icon, value, label, href, accent,
+  title, value, description, icon, href,
 }: {
-  icon: React.ReactNode; value: number; label: string; href: string;
-  accent: keyof typeof ACCENT_STYLES;
+  title: string; value: number; description: string;
+  icon: React.ReactNode; href: string;
 }) {
-  const s = ACCENT_STYLES[accent];
   return (
-    <Link
-      href={href}
-      className={`group rounded-2xl border ${s.border} ${s.bg} p-4 flex flex-col gap-2 hover:scale-[1.02] active:scale-95 transition-all`}
-    >
-      <div className={`${s.icon}`}>{icon}</div>
-      <div>
-        <p className={`text-3xl font-extrabold leading-none ${s.num}`}>{value}</p>
-        <p className="text-xs text-ink-3 mt-1 font-medium">{label}</p>
-      </div>
+    <Link href={href}>
+      <Card className="hover:bg-accent/30 transition-colors cursor-pointer">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          {icon}
+        </CardHeader>
+        <CardContent>
+          <p className="text-3xl font-bold">{value}</p>
+          <p className="text-xs text-muted-foreground mt-1">{description}</p>
+        </CardContent>
+      </Card>
     </Link>
   );
 }

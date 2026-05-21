@@ -4,36 +4,50 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
+import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 import type { Suscripcion } from "@/types/database";
 import {
   Scissors, LayoutDashboard, Calendar, Plus, Users,
   Settings, Clock, BarChart2, Star, LogOut, Menu, X,
+  ChevronRight,
 } from "lucide-react";
 
 // ── Nav config ────────────────────────────────────────────────────────────────
 
-const NAV_MAIN = [
-  { href: "/dashboard",             label: "Dashboard",  icon: LayoutDashboard, exact: true  },
-  { href: "/dashboard/citas",       label: "Citas",      icon: Calendar,        exact: false },
-  { href: "/dashboard/citas/nueva", label: "Nueva cita", icon: Plus,            exact: true  },
-  { href: "/dashboard/barberos",    label: "Barberos",   icon: Users,           exact: false },
-  { href: "/dashboard/servicios",   label: "Servicios",  icon: Scissors,        exact: false },
-  { href: "/dashboard/horarios",    label: "Horarios",   icon: Clock,           exact: false },
-  { href: "/dashboard/reportes",    label: "Reportes",   icon: BarChart2,       exact: false },
-];
-
-const NAV_SETTINGS = [
-  { href: "/dashboard/configuracion", label: "Configuración", icon: Settings },
-  { href: "/dashboard/upgrade",       label: "Upgrade Pro",   icon: Star     },
+const NAV_GROUPS = [
+  {
+    label: "Principal",
+    items: [
+      { href: "/dashboard",             label: "Dashboard",  icon: LayoutDashboard, exact: true  },
+      { href: "/dashboard/citas",       label: "Citas",      icon: Calendar,        exact: false },
+      { href: "/dashboard/citas/nueva", label: "Nueva cita", icon: Plus,            exact: true  },
+      { href: "/dashboard/barberos",    label: "Barberos",   icon: Users,           exact: false },
+      { href: "/dashboard/servicios",   label: "Servicios",  icon: Scissors,        exact: false },
+    ],
+  },
+  {
+    label: "Gestión",
+    items: [
+      { href: "/dashboard/horarios",    label: "Horarios",     icon: Clock,     exact: false },
+      { href: "/dashboard/reportes",    label: "Reportes",     icon: BarChart2, exact: false },
+    ],
+  },
+  {
+    label: "Cuenta",
+    items: [
+      { href: "/dashboard/configuracion", label: "Configuración", icon: Settings, exact: false },
+      { href: "/dashboard/upgrade",       label: "Upgrade Pro",   icon: Star,     exact: false },
+    ],
+  },
 ];
 
 const BOTTOM_TABS = [
-  { href: "/dashboard",             label: "Inicio",   icon: LayoutDashboard, exact: true  },
-  { href: "/dashboard/citas",       label: "Citas",    icon: Calendar,        exact: false },
-  { href: "/dashboard/citas/nueva", label: "Nueva",    icon: Plus,            exact: true,  fab: true },
-  { href: "/dashboard/barberos",    label: "Equipo",   icon: Users,           exact: false },
-  { href: "/dashboard/servicios",   label: "Servicios",icon: Scissors,        exact: false },
+  { href: "/dashboard",           label: "Inicio",    icon: LayoutDashboard, exact: true  },
+  { href: "/dashboard/citas",     label: "Citas",     icon: Calendar,        exact: false },
+  { href: "/dashboard/citas/nueva",label: "Nueva",   icon: Plus,            exact: true  },
+  { href: "/dashboard/barberos",  label: "Equipo",    icon: Users,           exact: false },
+  { href: "/dashboard/servicios", label: "Servicios", icon: Scissors,        exact: false },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -43,13 +57,13 @@ function isActive(pathname: string, href: string, exact: boolean) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-function initials(name: string) {
+function getInitials(name: string) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((n) => n[0]).join("").toUpperCase() || "?";
 }
 
-// ── Sidebar nav item ──────────────────────────────────────────────────────────
+// ── Sidebar nav link ──────────────────────────────────────────────────────────
 
-function SideItem({
+function NavLink({
   href, label, Icon, active, onClick,
 }: {
   href: string; label: string; Icon: React.ElementType; active: boolean; onClick?: () => void;
@@ -58,17 +72,15 @@ function SideItem({
     <Link
       href={href}
       onClick={onClick}
-      className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+      className={cn(
+        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-gold/10 text-gold"
-          : "text-ink-3 hover:bg-chip hover:text-ink"
-      }`}
-    >
-      {active && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gold rounded-r-full" />
+          ? "bg-accent text-accent-foreground"
+          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
       )}
-      <Icon className="w-[18px] h-[18px] shrink-0" />
-      <span className="flex-1 truncate">{label}</span>
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      {label}
     </Link>
   );
 }
@@ -80,18 +92,20 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const router   = useRouter();
   const supabase = createClient();
 
-  const [barberiaId,   setBarberiaId]   = useState<string | null>(null);
   const [barberiaNombre, setBarberiaNombre] = useState("");
-  const [userName,     setUserName]     = useState("");
-  const [avatarUrl,    setAvatarUrl]    = useState<string | null>(null);
-  const [suscripcion,  setSuscripcion]  = useState<Suscripcion | null>(null);
-  const [drawerOpen,   setDrawerOpen]   = useState(false);
+  const [barberiaId,     setBarberiaId]     = useState("");
+  const [userName,       setUserName]       = useState("");
+  const [userEmail,      setUserEmail]      = useState("");
+  const [avatarUrl,      setAvatarUrl]      = useState<string | null>(null);
+  const [suscripcion,    setSuscripcion]    = useState<Suscripcion | null>(null);
+  const [mobileOpen,     setMobileOpen]     = useState(false);
 
   useEffect(() => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "");
+      setUserEmail(user.email ?? "");
       setAvatarUrl(user.user_metadata?.avatar_url ?? null);
       const { data: bar } = await supabase
         .from("barberias").select("id, nombre").eq("owner_id", user.id).single();
@@ -104,250 +118,211 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     })();
   }, []);
 
-  useEffect(() => { setDrawerOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.push("/");
   }
 
-  const estado = getEstadoSuscripcion(suscripcion);
-  const ini    = initials(userName);
+  const estado   = getEstadoSuscripcion(suscripcion);
+  const initials = getInitials(userName);
 
-  // Avatar component reused in several places
-  function Avatar({ size = 9 }: { size?: number }) {
-    const cls = `w-${size} h-${size} rounded-xl shrink-0 object-cover`;
-    return avatarUrl
-      ? <img src={avatarUrl} alt={userName} className={cls} />
-      : <div className={`w-${size} h-${size} rounded-xl bg-gold/20 border border-gold/25 flex items-center justify-center text-gold font-bold text-sm shrink-0`}>{ini}</div>;
-  }
-
-  return (
-    <>
-      {/* ── Desktop Sidebar ────────────────────────────────────────────────── */}
-      <aside className="hidden md:flex flex-col fixed inset-y-0 left-0 w-64 z-40 border-r border-line bg-card">
-
+  // ── Sidebar content (shared between desktop and mobile drawer) ──────────────
+  function SidebarContent({ onNav }: { onNav?: () => void }) {
+    return (
+      <div className="flex h-full flex-col">
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 h-[64px] border-b border-line shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gold flex items-center justify-center shrink-0">
-            <Scissors className="w-4 h-4 text-zinc-950" />
-          </div>
-          <div className="min-w-0">
-            <p className="font-extrabold text-base leading-tight">
-              <span className="text-ink">Barber</span><span className="text-gold">Flow</span>
-            </p>
-            {barberiaNombre && (
-              <p className="text-[10px] text-ink-4 truncate leading-tight">{barberiaNombre}</p>
-            )}
-          </div>
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <Link href="/dashboard" className="flex items-center gap-2 font-semibold" onClick={onNav}>
+            <Scissors className="h-5 w-5 text-primary" />
+            <span>BarberFlow</span>
+          </Link>
         </div>
 
-        {/* Nav main */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-          <p className="text-[10px] font-semibold text-ink-4 uppercase tracking-widest px-3 mb-2">Principal</p>
-          {NAV_MAIN.map((item) => (
-            <SideItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              Icon={item.icon}
-              active={isActive(pathname, item.href, item.exact)}
-            />
-          ))}
-
-          <div className="my-3 h-px bg-line" />
-          <p className="text-[10px] font-semibold text-ink-4 uppercase tracking-widest px-3 mb-2">Ajustes</p>
-          {NAV_SETTINGS.map((item) => (
-            <SideItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              Icon={item.icon}
-              active={isActive(pathname, item.href, false)}
-            />
-          ))}
-        </nav>
+        {/* Nav */}
+        <div className="flex-1 overflow-auto py-4">
+          <nav className="grid items-start gap-px px-2 text-sm font-medium lg:px-4">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.label} className="mb-4">
+                <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  {group.label}
+                </p>
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    label={item.label}
+                    Icon={item.icon}
+                    active={isActive(pathname, item.href, item.exact)}
+                    onClick={onNav}
+                  />
+                ))}
+              </div>
+            ))}
+          </nav>
+        </div>
 
         {/* Upgrade banner */}
         {!estado.esPro && (
-          <div className="px-3 pb-3">
-            <Link
-              href="/dashboard/upgrade"
-              className="flex items-center gap-2.5 rounded-xl bg-gradient-to-br from-gold/15 to-amber-700/10 border border-gold/20 px-3 py-3 hover:from-gold/25 transition-all"
-            >
-              <Star className="w-4 h-4 text-gold shrink-0" />
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-gold leading-tight">
-                  {estado.esTrial ? `Trial · ${estado.diasRestantes}d restantes` : "Plan gratuito"}
-                </p>
-                <p className="text-[10px] text-ink-3 leading-tight">Desbloquea todo con Pro</p>
+          <div className="px-4 pb-3">
+            <div className="rounded-lg border bg-card p-3">
+              <div className="flex items-start gap-2">
+                <Star className="mt-px h-4 w-4 shrink-0 text-primary" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold">
+                    {estado.esTrial ? `Trial · ${estado.diasRestantes} días` : "Plan gratuito"}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">
+                    Desbloquea todo con Pro
+                  </p>
+                </div>
               </div>
-            </Link>
+              <Link
+                href="/dashboard/upgrade"
+                onClick={onNav}
+                className="mt-3 flex w-full items-center justify-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Upgrade a Pro <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
           </div>
         )}
 
-        {/* User bar */}
-        <div className="flex items-center gap-2.5 px-4 py-3 border-t border-line shrink-0">
-          <Avatar size={9} />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate leading-tight">{userName || "Usuario"}</p>
-            <p className="text-[10px] text-ink-4 leading-tight">Admin</p>
-          </div>
-          <ThemeToggle />
-          <button
-            onClick={handleSignOut}
-            title="Cerrar sesión"
-            className="p-1.5 rounded-lg text-ink-3 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
-      </aside>
-
-      {/* ── Mobile Top Header ──────────────────────────────────────────────── */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-40 h-14 bg-card/95 backdrop-blur-xl border-b border-line">
-        <div className="flex items-center h-full px-4 gap-3">
-          <Link href="/dashboard" className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="w-7 h-7 rounded-lg bg-gold flex items-center justify-center shrink-0">
-              <Scissors className="w-3.5 h-3.5 text-zinc-950" />
-            </div>
-            <span className="font-extrabold text-sm">
-              <span className="text-ink">Barber</span><span className="text-gold">Flow</span>
-            </span>
-          </Link>
-
-          <ThemeToggle />
-
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="flex items-center justify-center w-9 h-9 rounded-xl bg-chip border border-line text-ink-2 hover:text-gold transition-colors"
-          >
-            <Menu className="w-[18px] h-[18px]" />
-          </button>
-        </div>
-      </header>
-
-      {/* ── Mobile Drawer (right panel) ────────────────────────────────────── */}
-      {drawerOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setDrawerOpen(false)}
-          />
-          <div className="absolute inset-y-0 right-0 w-[280px] flex flex-col bg-card border-l border-line">
-            {/* Drawer header */}
-            <div className="flex items-center gap-3 px-4 h-14 border-b border-line shrink-0">
-              <Avatar size={8} />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate leading-tight">{userName}</p>
-                <p className="text-[10px] text-ink-4 truncate leading-tight">{barberiaNombre || "Mi barbería"}</p>
+        {/* User */}
+        <div className="border-t p-4">
+          <div className="flex items-center gap-3">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={userName} className="h-8 w-8 rounded-full object-cover shrink-0" />
+            ) : (
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+                {initials}
               </div>
-              <button
-                onClick={() => setDrawerOpen(false)}
-                className="p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-chip transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="truncate text-sm font-medium leading-tight">{userName || "Usuario"}</p>
+              <p className="truncate text-xs text-muted-foreground leading-tight">{userEmail}</p>
             </div>
-
-            {/* Drawer nav */}
-            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-              <p className="text-[10px] font-semibold text-ink-4 uppercase tracking-widest px-3 mb-2">Principal</p>
-              {NAV_MAIN.map((item) => (
-                <SideItem
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  Icon={item.icon}
-                  active={isActive(pathname, item.href, item.exact)}
-                  onClick={() => setDrawerOpen(false)}
-                />
-              ))}
-              <div className="my-3 h-px bg-line" />
-              <p className="text-[10px] font-semibold text-ink-4 uppercase tracking-widest px-3 mb-2">Ajustes</p>
-              {NAV_SETTINGS.map((item) => (
-                <SideItem
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  Icon={item.icon}
-                  active={isActive(pathname, item.href, false)}
-                  onClick={() => setDrawerOpen(false)}
-                />
-              ))}
-            </nav>
-
-            {/* Drawer footer */}
-            <div className="px-3 py-4 border-t border-line space-y-1 shrink-0">
-              {!estado.esPro && (
-                <Link
-                  href="/dashboard/upgrade"
-                  onClick={() => setDrawerOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl bg-gold/10 border border-gold/20 px-3 py-2.5 mb-2"
-                >
-                  <Star className="w-4 h-4 text-gold shrink-0" />
-                  <span className="text-xs font-bold text-gold">Upgrade a Pro →</span>
-                </Link>
-              )}
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+                title="Cerrar sesión"
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                <LogOut className="w-4 h-4" />
-                Cerrar sesión
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {/* ── Content ────────────────────────────────────────────────────────── */}
-      <div className="md:pl-64 pt-14 md:pt-0 pb-20 md:pb-0 min-h-screen">
-        {children}
+  return (
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
+
+      {/* ── Desktop Sidebar ──────────────────────────────────────────────────── */}
+      <div className="hidden border-r bg-muted/40 md:block">
+        <div className="flex h-full max-h-screen flex-col gap-2 sticky top-0">
+          <SidebarContent />
+        </div>
       </div>
 
-      {/* ── Mobile Bottom Nav ──────────────────────────────────────────────── */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 h-16 bg-card/95 backdrop-blur-xl border-t border-line">
-        <div className="flex items-center h-full">
+      {/* ── Right side: header + content ────────────────────────────────────── */}
+      <div className="flex flex-col">
+
+        {/* ── Mobile / Tablet top header ──────────────────────────────────────── */}
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:hidden">
+          {/* Mobile drawer trigger */}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Menú</span>
+          </button>
+
+          <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+            <Scissors className="h-5 w-5 text-primary" />
+            <span>BarberFlow</span>
+          </Link>
+
+          <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={userName} className="h-8 w-8 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+                {initials}
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* Desktop top bar (visible only on md+) */}
+        <header className="hidden md:flex h-[60px] items-center gap-4 border-b bg-muted/40 px-4 lg:px-6">
+          <div className="ml-auto flex items-center gap-2">
+            {barberiaNombre && (
+              <span className="text-sm text-muted-foreground hidden lg:block">{barberiaNombre}</span>
+            )}
+          </div>
+        </header>
+
+        {/* ── Page content ─────────────────────────────────────────────────── */}
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 pb-24 md:pb-6">
+          {children}
+        </main>
+      </div>
+
+      {/* ── Mobile bottom nav ────────────────────────────────────────────────── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur-md md:hidden">
+        <div className="flex h-16 items-center">
           {BOTTOM_TABS.map((tab) => {
             const active = isActive(pathname, tab.href, tab.exact);
             const Icon   = tab.icon;
-            if ("fab" in tab && tab.fab) {
-              return (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  className="flex-1 flex flex-col items-center justify-center gap-0.5"
-                >
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all -mt-4 ${
-                    active ? "bg-amber-400 shadow-amber-400/40" : "bg-gold shadow-gold/30"
-                  }`}>
-                    <Icon className="w-5 h-5 text-zinc-950" />
-                  </div>
-                  <span className={`text-[9px] font-semibold mt-0.5 ${active ? "text-gold" : "text-ink-4"}`}>
-                    {tab.label}
-                  </span>
-                </Link>
-              );
-            }
+            const isNew  = tab.href === "/dashboard/citas/nueva";
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 relative transition-colors ${
-                  active ? "text-gold" : "text-ink-4"
-                }`}
-              >
-                {active && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-[2px] bg-gold rounded-full" />
+                className={cn(
+                  "flex flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
+                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                  isNew && "relative"
                 )}
-                <Icon className="w-[20px] h-[20px]" />
-                <span className="text-[9px] font-semibold leading-none">{tab.label}</span>
+              >
+                {isNew ? (
+                  <div className="flex h-10 w-10 -mt-5 items-center justify-center rounded-full bg-primary shadow-lg">
+                    <Icon className="h-5 w-5 text-primary-foreground" />
+                  </div>
+                ) : (
+                  <Icon className="h-5 w-5" />
+                )}
+                <span className={cn("text-[10px]", isNew && "mt-0.5")}>{tab.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
-    </>
+
+      {/* ── Mobile Drawer ────────────────────────────────────────────────────── */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="absolute inset-y-0 left-0 w-72 bg-background border-r shadow-xl">
+            <div className="absolute right-4 top-4">
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-accent transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <SidebarContent onNav={() => setMobileOpen(false)} />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

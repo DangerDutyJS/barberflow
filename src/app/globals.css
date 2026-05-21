@@ -1,55 +1,122 @@
 @import "tailwindcss";
 
-/* ── Semantic design tokens ─────────────────────────────────────────────────── */
+/* ── shadcn/ui — dark theme (default) ───────────────────────────────────────── */
 :root {
-  /* Dark (default) */
-  --base:   #09090b;
-  --card:   #18181b;
-  --chip:   #27272a;
-  --line:   #27272a;
-  --line-2: #3f3f46;
-  --ink:    #ffffff;
-  --ink-2:  #a1a1aa;
-  --ink-3:  #71717a;
-  --ink-4:  #52525b;
+  --background:          240 10% 3.9%;
+  --foreground:          0 0% 98%;
+  --card:                240 10% 3.9%;
+  --card-foreground:     0 0% 98%;
+  --popover:             240 10% 3.9%;
+  --popover-foreground:  0 0% 98%;
+  --primary:             38 71% 57%;       /* gold #d4a853 */
+  --primary-foreground:  240 10% 3.9%;
+  --secondary:           240 3.7% 15.9%;
+  --secondary-foreground:0 0% 98%;
+  --muted:               240 3.7% 15.9%;
+  --muted-foreground:    240 5% 64.9%;
+  --accent:              240 3.7% 15.9%;
+  --accent-foreground:   0 0% 98%;
+  --destructive:         0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border:              240 3.7% 15.9%;
+  --input:               240 3.7% 15.9%;
+  --ring:                38 71% 57%;       /* gold */
+  --radius:              0.5rem;
+
+  /* BarberFlow semantic tokens (kept for backward compat) */
+  --base:    #09090b;
+  --chip:    #27272a;
+  --line:    #27272a;
+  --line-2:  #3f3f46;
+  --ink:     #ffffff;
+  --ink-2:   #a1a1aa;
+  --ink-3:   #71717a;
+  --ink-4:   #52525b;
+  --gold:    #d4a853;
 }
 
+/* ── shadcn/ui — light theme ────────────────────────────────────────────────── */
 :root.light {
-  --base:   #ffffff;
-  --card:   #f4f4f5;
-  --chip:   #e4e4e7;
-  --line:   #e4e4e7;
-  --line-2: #d4d4d8;
-  --ink:    #09090b;
-  --ink-2:  #52525b;
-  --ink-3:  #71717a;
-  --ink-4:  #a1a1aa;
+  --background:          0 0% 100%;
+  --foreground:          240 10% 3.9%;
+  --card:                0 0% 100%;
+  --card-foreground:     240 10% 3.9%;
+  --popover:             0 0% 100%;
+  --popover-foreground:  240 10% 3.9%;
+  --primary:             38 71% 45%;
+  --primary-foreground:  0 0% 98%;
+  --secondary:           240 4.8% 95.9%;
+  --secondary-foreground:240 5.9% 10%;
+  --muted:               240 4.8% 95.9%;
+  --muted-foreground:    240 3.8% 46.1%;
+  --accent:              240 4.8% 95.9%;
+  --accent-foreground:   240 5.9% 10%;
+  --destructive:         0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border:              240 5.9% 90%;
+  --input:               240 5.9% 90%;
+  --ring:                38 71% 45%;
+
+  /* BarberFlow light tokens */
+  --base:    #ffffff;
+  --chip:    #e4e4e7;
+  --line:    #e4e4e7;
+  --line-2:  #d4d4d8;
+  --ink:     #09090b;
+  --ink-2:   #52525b;
+  --ink-3:   #71717a;
+  --ink-4:   #a1a1aa;
+  --gold:    #b8892e;
 }
 
 @theme inline {
   --font-sans: var(--font-geist);
-  --color-gold:      #d4a853;
-  --color-gold-light: #e8c47a;
-  --color-gold-dark:  #b8892e;
 
-  /* Expose CSS vars as Tailwind colors */
-  --color-base:   var(--base);
-  --color-card:   var(--card);
-  --color-chip:   var(--chip);
-  --color-line:   var(--line);
-  --color-line-2: var(--line-2);
-  --color-ink:    var(--ink);
-  --color-ink-2:  var(--ink-2);
-  --color-ink-3:  var(--ink-3);
-  --color-ink-4:  var(--ink-4);
+  /* shadcn colors as Tailwind utilities */
+  --color-background:         hsl(var(--background));
+  --color-foreground:         hsl(var(--foreground));
+  --color-card:               hsl(var(--card));
+  --color-card-foreground:    hsl(var(--card-foreground));
+  --color-popover:            hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary:            hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary:          hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted:              hsl(var(--muted));
+  --color-muted-foreground:   hsl(var(--muted-foreground));
+  --color-accent:             hsl(var(--accent));
+  --color-accent-foreground:  hsl(var(--accent-foreground));
+  --color-destructive:        hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border:             hsl(var(--border));
+  --color-input:              hsl(var(--input));
+  --color-ring:               hsl(var(--ring));
+
+  /* BarberFlow tokens */
+  --color-base:    var(--base);
+  --color-chip:    var(--chip);
+  --color-line:    var(--line);
+  --color-line-2:  var(--line-2);
+  --color-ink:     var(--ink);
+  --color-ink-2:   var(--ink-2);
+  --color-ink-3:   var(--ink-3);
+  --color-ink-4:   var(--ink-4);
+  --color-gold:    var(--gold);
+
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  var(--radius);
+  --radius-lg:  calc(var(--radius) + 4px);
+  --radius-xl:  calc(var(--radius) + 8px);
+  --radius-2xl: calc(var(--radius) + 12px);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-geist), Arial, sans-serif;
-  background-color: var(--base);
-  color: var(--ink);
+  background-color: hsl(var(--background));
+  color:            hsl(var(--foreground));
+  font-family:      var(--font-geist), Arial, sans-serif;
 }
+
+* { border-color: hsl(var(--border)); }
