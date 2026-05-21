@@ -1,7 +1,7 @@
 # BarberFlow — Plataforma de Agendamiento para Barberías
 
 **Deploy activo:** https://barber-rylax.vercel.app  
-**Última actualización:** 2026-05-21 — módulo `/b/[slug]` completado
+**Última actualización:** 2026-05-21
 
 ---
 
@@ -46,6 +46,7 @@
 - Tabs: **Por hacer** (pendiente + confirmada) y **Echos** (completada + cancelada)
 - Filtro Hoy / Todas
 - Acciones inline: marcar completada, cancelar
+- Muestra fotos de referencia del cliente (miniaturas clickeables) cuando fueron adjuntadas desde la página pública
 
 ### Nueva Cita (`/dashboard/citas/nueva`)
 - Wizard 4 pasos: Servicio → Barbero → Fecha & Hora → Cliente
@@ -75,8 +76,6 @@
 - Script anti-flash en `<head>`
 - Variables CSS semánticas en `globals.css`
 
----
-
 ### Página pública de agendamiento (`/b/[slug]`)
 - URL pública por barbería: `/b/mi-barberia` — sin necesidad de cuenta
 - Wizard 4 pasos: Servicio → Barbero → Fecha & Hora → Datos del cliente
@@ -84,7 +83,7 @@
 - Aviso si el barbero no trabaja el día seleccionado
 - Pantalla de éxito con resumen + link a WhatsApp si hay teléfono configurado
 - Manejo de slug no encontrado
-- El cliente puede adjuntar hasta 3 fotos de referencia del corte (máx. 2 MB c/u, Supabase Storage bucket `referencias`)
+- El cliente puede adjuntar hasta 3 fotos de referencia del corte (máx. 2 MB c/u, bucket `referencias` en Supabase Storage)
 
 ---
 
@@ -164,6 +163,7 @@ npm run dev
 src/
 ├── app/
 │   ├── auth/login/
+│   ├── b/[slug]/                  # Página pública de agendamiento
 │   ├── dashboard/
 │   │   ├── page.tsx               # Dashboard principal
 │   │   ├── layout.tsx
