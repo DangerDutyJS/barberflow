@@ -147,8 +147,7 @@
 
 ## 🗄 Base de Datos — Supabase
 
-**Proyecto ID:** `ikinfcwknskmuhjuufqy`  
-**Dashboard:** https://supabase.com/dashboard/project/ikinfcwknskmuhjuufqy
+**Dashboard:** https://supabase.com/dashboard (acceso privado al equipo)
 
 ### Tablas
 - `profiles` — Perfil de usuarios (auto-creado al registrarse via trigger; upsert en onboarding como fallback)
@@ -187,36 +186,15 @@
 
 ## ⚙️ Variables de Entorno
 
-### Local (`.env.local`)
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://ikinfcwknskmuhjuufqy.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-WOMPI_PUBLIC_KEY=pub_test_...
-WOMPI_PRIVATE_KEY=prv_test_...
-WOMPI_INTEGRITY_KEY=...
-WOMPI_EVENTS_KEY=...
-```
+Las credenciales se gestionan de forma privada. Las variables requeridas son:
 
-### Producción (Vercel → Settings → Environment Variables)
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://ikinfcwknskmuhjuufqy.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...
-NEXT_PUBLIC_SITE_URL=https://barber-rylax-three.vercel.app
-NEXT_PUBLIC_APP_URL=https://barber-rylax-three.vercel.app
-WOMPI_PUBLIC_KEY=pub_prod_...   # producción activa
-WOMPI_PRIVATE_KEY=prv_prod_...
-WOMPI_INTEGRITY_KEY=prod_integrity_...
-WOMPI_EVENTS_KEY=prod_events_...
-WOMPI_API_URL=https://production.wompi.co/v1
-```
+- `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` — desde el dashboard de Supabase
+- `SUPABASE_SERVICE_ROLE_KEY` — desde el dashboard de Supabase (solo servidor)
+- `NEXT_PUBLIC_SITE_URL` y `NEXT_PUBLIC_APP_URL` — URL base de la app
+- `WOMPI_PUBLIC_KEY`, `WOMPI_PRIVATE_KEY`, `WOMPI_INTEGRITY_KEY`, `WOMPI_EVENTS_KEY` — desde el dashboard de Wompi
+- `WOMPI_API_URL` — endpoint de la API de Wompi
 
-### Supabase Auth → URL Configuration
-- **Site URL:** `https://barber-rylax-three.vercel.app`
-- **Redirect URLs:** `https://barber-rylax-three.vercel.app/**`
+Para desarrollo local copia `.env.local` desde el equipo del equipo. Para producción las variables están configuradas directamente en Vercel.
 
 ---
 
