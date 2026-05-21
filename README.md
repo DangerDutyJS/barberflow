@@ -4,8 +4,8 @@
 
 # 📌 Estado del Proyecto
 
-**Última actualización:** 2026-05-18  
-**Deploy activo:** https://barber-rylax.vercel.app
+**Última actualización:** 2026-05-20  
+**Deploy activo:** https://barber-rylax-three.vercel.app
 
 ---
 
@@ -18,7 +18,7 @@
 - Recuperación de contraseña ("¿Olvidaste tu contraseña?")
 - Redirects post-login al dashboard
 - Protección de rutas via `proxy.ts` (Next.js 16)
-- Supabase Auth URL configurada en producción (`https://barber-rylax.vercel.app`)
+- Supabase Auth URL configurada en producción (`https://barber-rylax-three.vercel.app`)
 
 ### 🚀 Onboarding (`/onboarding`)
 - Creación del perfil de barbería (nombre, slug, país, departamento, ciudad, dirección, teléfono, email)
@@ -33,7 +33,7 @@
 - Banner de trial (días restantes, alerta ≤2 días, estado vencido)
 - Tarjetas de stats: Citas hoy, Total citas, Barberos activos, Plan activo
 - Banner de upgrade (solo cuando no es Pro)
-- Accesos rápidos a: Nueva cita, Barberos, Servicios, Horarios, Reportes, Configuración
+- Accesos rápidos a: Mis citas, Nueva cita, Barberos, Servicios, Horarios, Reportes, Configuración
 - Info resumen de la barbería
 - Auth check server-side (sin flash de login)
 
@@ -65,16 +65,20 @@
 - Validación de slug único
 - Toast de feedback en guardado
 
-### 💳 Sistema de Suscripciones y Pagos (Wompi)
+### 💳 Sistema de Suscripciones y Pagos (Wompi) — PRODUCCIÓN ACTIVA
 - Enum `plan_suscripcion`: `trial | gratis | pro | business`
 - Trial: 7 días gratis con fecha de expiración
 - Planes Pro: Mensual $49.900 COP / Anual $479.000 COP
+- Plan de prueba: $10.000 COP / 30 días (para verificar flujo de pago real)
 - Tabla `pagos` con RLS
-- Ruta `/dashboard/upgrade` con comparativa de planes
+- Ruta `/dashboard/upgrade` con comparativa de planes + tarjeta de prueba
 - Ruta `/dashboard/upgrade/success` con polling de confirmación
 - API Route `POST /api/checkout/wompi` — genera referencia + URL de checkout
   - URL de redirect derivada de `new URL(request.url).origin` (fix 403 CloudFront)
-- API Route `POST /api/webhooks/wompi` — procesa eventos de pago
+- API Route `POST /api/webhooks/wompi` — procesa eventos de pago y activa plan Pro
+- **Wompi en producción** — claves `pub_prod_*` / `prv_prod_*` activas en Vercel
+- **Pago real verificado** — flujo completo probado: checkout → webhook → activación de plan Pro
+- Webhook configurado: `https://barber-rylax-three.vercel.app/api/webhooks/wompi`
 
 ### 📱 PWA (Progressive Web App)
 - `manifest.json` con `display: standalone`, `start_url: /dashboard`
@@ -106,6 +110,23 @@
 
 - Todos los componentes, inputs, placeholders y hovers usan los tokens semánticos
 
+### 📅 Citas (`/dashboard/citas`)
+- Lista de citas con dos tabs: **Por hacer** (pendiente + confirmada) y **Echos** (completada/cancelada)
+- Filtro por fecha: Hoy / Todas
+- Cada cita muestra: fecha, hora, cliente, teléfono, servicio, barbero, precio y badge de estado
+- Acciones inline: marcar como completada o cancelar
+- Contador de pendientes y completadas en cada tab
+- Estado vacío con CTA para agendar
+
+### 📅 Nueva Cita (`/dashboard/citas/nueva`)
+- Wizard de 4 pasos: Servicio → Barbero → Fecha & Hora → Cliente
+- Indicador de progreso con steps animados
+- Selección de servicio con precio y duración
+- Selección de barbero (o "Sin asignar")
+- Grilla de slots horarios con disponibilidad real (bloquea slots ocupados)
+- Formulario de datos del cliente (nombre, teléfono, email, notas)
+- Resumen antes de confirmar
+
 ### 🌐 Landing Page (`/`)
 - Hero, Features, HowItWorks, Pricing, Footer
 - Verificación de sesión server-side (no flash)
@@ -118,11 +139,9 @@
 
 | Módulo | Estado | Notas |
 |--------|--------|-------|
-| `/dashboard/citas/nueva` | ⏳ Pendiente | Creación manual de citas |
 | `/dashboard/horarios` | ⏳ Pendiente | Configurar disponibilidad semanal por barbero |
 | `/dashboard/reportes` | ⏳ Pendiente | Ingresos y estadísticas |
 | `/b/[slug]` | ⏳ Pendiente | Página pública de agendamiento para clientes |
-| Webhook Wompi prod | ⏳ Pendiente | Configurar URL en dashboard Wompi |
 
 ---
 
@@ -161,8 +180,8 @@
 | Animaciones | Framer Motion |
 | Backend/DB | Supabase (PostgreSQL + Storage + Auth) |
 | Auth | Supabase Auth (email + contraseña) |
-| Pagos | Wompi (Colombia) — sandbox activo |
-| Hosting | Vercel — https://barber-rylax.vercel.app |
+| Pagos | Wompi (Colombia) — producción activa |
+| Hosting | Vercel — https://barber-rylax-three.vercel.app |
 
 ---
 
@@ -186,17 +205,18 @@ WOMPI_EVENTS_KEY=...
 NEXT_PUBLIC_SUPABASE_URL=https://ikinfcwknskmuhjuufqy.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
-NEXT_PUBLIC_SITE_URL=https://barber-rylax.vercel.app
-NEXT_PUBLIC_APP_URL=https://barber-rylax.vercel.app
-WOMPI_PUBLIC_KEY=pub_test_...
-WOMPI_PRIVATE_KEY=prv_test_...
-WOMPI_INTEGRITY_KEY=...
-WOMPI_EVENTS_KEY=...
+NEXT_PUBLIC_SITE_URL=https://barber-rylax-three.vercel.app
+NEXT_PUBLIC_APP_URL=https://barber-rylax-three.vercel.app
+WOMPI_PUBLIC_KEY=pub_prod_...   # producción activa
+WOMPI_PRIVATE_KEY=prv_prod_...
+WOMPI_INTEGRITY_KEY=prod_integrity_...
+WOMPI_EVENTS_KEY=prod_events_...
+WOMPI_API_URL=https://production.wompi.co/v1
 ```
 
 ### Supabase Auth → URL Configuration
-- **Site URL:** `https://barber-rylax.vercel.app`
-- **Redirect URLs:** `https://barber-rylax.vercel.app/**`
+- **Site URL:** `https://barber-rylax-three.vercel.app`
+- **Redirect URLs:** `https://barber-rylax-three.vercel.app/**`
 
 ---
 
@@ -220,9 +240,11 @@ src/
 │   │   ├── page.tsx         # Dashboard principal
 │   │   ├── layout.tsx       # Layout con InstallTutorial
 │   │   ├── barberos/        # Gestión de barberos
+│   │   ├── citas/           # Lista de citas (por hacer / echos)
+│   │   │   └── nueva/       # Wizard nueva cita (4 pasos)
 │   │   ├── servicios/       # Catálogo de servicios
 │   │   ├── configuracion/   # Config de la barbería
-│   │   └── upgrade/         # Planes y pagos
+│   │   └── upgrade/         # Planes y pagos Wompi
 │   ├── onboarding/          # Registro inicial de barbería
 │   ├── api/
 │   │   ├── checkout/wompi/  # Genera checkout URL
