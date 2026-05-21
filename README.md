@@ -114,6 +114,7 @@ _Todos los módulos han sido implementados._
 | `migrations/001_add_trial_and_payments.sql` | Enum trial + columnas Wompi + tabla pagos |
 | `migrations/20260518043635_fix_servicios_grants.sql` | Grants para roles anon y authenticated |
 | `migrations/20260518120000_fix_profiles_rls_and_backfill.sql` | Política INSERT en profiles + backfill |
+| `migrations/20260521000000_rls_anon_public_booking.sql` | Políticas RLS para rol anon — agendamiento público `/b/[slug]` |
 
 ---
 
