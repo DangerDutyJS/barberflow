@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Scissors, MapPin, Phone, Clock, User, ChevronLeft, ChevronRight,
   Check, AlertCircle, CheckCircle2, Calendar, FileText, Mail,
+  ImagePlus, X,
 } from "lucide-react";
 import type { Barberia, Barbero, Servicio, Horario } from "@/types/database";
 
@@ -230,6 +231,10 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
   const [barberoSinHorario, setBarberoSinHorario] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
+  // Fotos de referencia
+  const [fotosArchivos, setFotosArchivos] = useState<File[]>([]);
+  const [fotosPreviews, setFotosPreviews] = useState<string[]>([]);
+
   // Envío
   const [agendando, setAgendando] = useState(false);
   const [error, setError] = useState("");
@@ -317,11 +322,53 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
     });
   }, [servicio, horarioBarbero]);
 
+  // ── Seleccionar fotos ────────────────────────────────────────────────────────
+  function handleFotosChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const archivos = Array.from(e.target.files ?? []);
+    const validos = archivos.filter((f) => {
+      if (!f.type.startsWith("image/")) return false;
+      if (f.size > 2 * 1024 * 1024) return false;
+      return true;
+    });
+    const combinados = [...fotosArchivos, ...validos].slice(0, 3);
+    setFotosArchivos(combinados);
+    fotosPreviews.forEach((u) => URL.revokeObjectURL(u));
+    setFotosPreviews(combinados.map((f) => URL.createObjectURL(f)));
+    e.target.value = "";
+  }
+
+  function eliminarFoto(i: number) {
+    URL.revokeObjectURL(fotosPreviews[i]);
+    setFotosArchivos((prev) => prev.filter((_, idx) => idx !== i));
+    setFotosPreviews((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
   // ── Confirmar cita ───────────────────────────────────────────────────────────
   const confirmarCita = useCallback(async () => {
     if (!barberia || !servicio || !barbero || !fecha || !hora || !clienteNombre.trim()) return;
     setAgendando(true);
     setError("");
+
+    // Subir fotos de referencia si el cliente adjuntó alguna
+    let fotosUrls: string[] | null = null;
+    if (fotosArchivos.length > 0) {
+      const urls: string[] = [];
+      for (const archivo of fotosArchivos) {
+        const ext = archivo.name.split(".").pop()?.toLowerCase() ?? "jpg";
+        const path = `${barberia.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error: uploadErr } = await supabase.storage
+          .from("referencias")
+          .upload(path, archivo, { contentType: archivo.type });
+        if (uploadErr) {
+          setError("Error al subir una imagen. Verifica el tamaño (máx. 2 MB) e intenta de nuevo.");
+          setAgendando(false);
+          return;
+        }
+        const { data: { publicUrl } } = supabase.storage.from("referencias").getPublicUrl(path);
+        urls.push(publicUrl);
+      }
+      fotosUrls = urls;
+    }
 
     const { error: err } = await supabase.from("citas").insert({
       barberia_id: barberia.id,
@@ -335,6 +382,7 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
       hora_fin: addMinutes(hora, servicio.duracion_minutos),
       estado: "pendiente",
       notas: notas.trim() || null,
+      fotos_referencia: fotosUrls,
       precio_final: Number(servicio.precio),
     });
 
@@ -344,7 +392,7 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
       return;
     }
     setCitaCreada(true);
-  }, [barberia, servicio, barbero, fecha, hora, clienteNombre, clienteTelefono, clienteEmail, notas, supabase]);
+  }, [barberia, servicio, barbero, fecha, hora, clienteNombre, clienteTelefono, clienteEmail, notas, fotosArchivos, supabase]);
 
   function resetWizard() {
     setCitaCreada(false);
@@ -358,6 +406,9 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
     setClienteEmail("");
     setNotas("");
     setError("");
+    fotosPreviews.forEach((u) => URL.revokeObjectURL(u));
+    setFotosArchivos([]);
+    setFotosPreviews([]);
   }
 
   // ── Pantallas especiales ─────────────────────────────────────────────────────
@@ -770,6 +821,49 @@ export default function PaginaPublica({ params }: { params: Promise<{ slug: stri
                             className="w-full rounded-xl border border-line-2 bg-chip pl-10 pr-4 py-3 text-sm text-ink placeholder-ink-3 outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors resize-none"
                           />
                         </div>
+                      </div>
+
+                      {/* Fotos de referencia */}
+                      <div>
+                        <label className="block text-sm text-ink-2 mb-1.5">
+                          Fotos de referencia
+                          <span className="text-ink-4 font-normal ml-1">(opcional · máx. 3 · 2 MB c/u)</span>
+                        </label>
+
+                        {fotosPreviews.length > 0 && (
+                          <div className="flex gap-2 mb-3 flex-wrap">
+                            {fotosPreviews.map((src, i) => (
+                              <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-line-2 shrink-0">
+                                <img src={src} alt={`referencia ${i + 1}`} className="w-full h-full object-cover" />
+                                <button
+                                  type="button"
+                                  onClick={() => eliminarFoto(i)}
+                                  className="absolute top-1 right-1 w-5 h-5 rounded-full bg-zinc-900/80 flex items-center justify-center hover:bg-red-500/80 transition-colors"
+                                >
+                                  <X className="w-3 h-3 text-white" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {fotosArchivos.length < 3 && (
+                          <label className="flex items-center gap-2 w-full rounded-xl border border-dashed border-line-2 px-4 py-3 text-sm text-ink-3 hover:border-gold hover:text-gold transition-colors cursor-pointer">
+                            <ImagePlus className="w-4 h-4 shrink-0" />
+                            <span>
+                              {fotosArchivos.length === 0
+                                ? "Agrega fotos del corte que deseas"
+                                : `Agregar otra foto (${fotosArchivos.length}/3)`}
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              multiple
+                              className="hidden"
+                              onChange={handleFotosChange}
+                            />
+                          </label>
+                        )}
                       </div>
                     </div>
 

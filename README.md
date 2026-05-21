@@ -84,6 +84,7 @@
 - Aviso si el barbero no trabaja el día seleccionado
 - Pantalla de éxito con resumen + link a WhatsApp si hay teléfono configurado
 - Manejo de slug no encontrado
+- El cliente puede adjuntar hasta 3 fotos de referencia del corte (máx. 2 MB c/u, Supabase Storage bucket `referencias`)
 
 ---
 
@@ -115,6 +116,7 @@ _Todos los módulos han sido implementados._
 | `migrations/20260518043635_fix_servicios_grants.sql` | Grants para roles anon y authenticated |
 | `migrations/20260518120000_fix_profiles_rls_and_backfill.sql` | Política INSERT en profiles + backfill |
 | `migrations/20260521000000_rls_anon_public_booking.sql` | Políticas RLS para rol anon — agendamiento público `/b/[slug]` |
+| `migrations/20260521120000_citas_fotos_referencia.sql` | Columna `fotos_referencia` en citas + bucket `referencias` en Storage |
 
 ---
 

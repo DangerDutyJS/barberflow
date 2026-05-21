@@ -77,6 +77,7 @@ export interface Cita {
   hora_fin: string;
   estado: EstadoCita;
   notas: string | null;
+  fotos_referencia: string[] | null;
   precio_final: number | null;
   created_at: string;
   updated_at: string;
