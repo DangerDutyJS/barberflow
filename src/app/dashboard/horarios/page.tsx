@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { Barbero, Horario } from "@/types/database";
-import { Clock, ChevronLeft, Save, User } from "lucide-react";
+import { Clock, Save, User } from "lucide-react";
 
 const DIAS = [
   { label: "Lunes",     value: 1 },
@@ -136,20 +136,6 @@ export default function HorariosPage() {
 
   return (
     <div className="min-h-screen bg-base text-ink">
-      {/* Header */}
-      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto max-w-4xl px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-gold" />
-            <span className="font-bold text-lg">Horarios</span>
-          </div>
-          <Link href="/dashboard" className="flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink transition-colors">
-            <ChevronLeft className="w-4 h-4" />
-            Dashboard
-          </Link>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-4xl px-4 py-8">
         {barberos.length === 0 ? (
           <div className="text-center py-20">

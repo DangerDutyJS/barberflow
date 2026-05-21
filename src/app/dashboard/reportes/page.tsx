@@ -6,7 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { Barbero, Servicio, Pago } from "@/types/database";
 import {
-  BarChart2, ChevronLeft, TrendingUp, Calendar,
+  BarChart2, TrendingUp, Calendar,
   CheckCircle, XCircle, Clock, CreditCard,
 } from "lucide-react";
 
@@ -155,19 +155,6 @@ export default function ReportesPage() {
 
   return (
     <div className="min-h-screen bg-base text-ink">
-      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BarChart2 className="w-5 h-5 text-gold" />
-            <span className="font-bold text-lg">Reportes</span>
-          </div>
-          <Link href="/dashboard" className="flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink transition-colors">
-            <ChevronLeft className="w-4 h-4" />
-            Dashboard
-          </Link>
-        </div>
-      </header>
-
       <main className="mx-auto max-w-5xl px-4 py-8 space-y-8">
         {/* Selector de período */}
         <div className="flex items-center gap-2 flex-wrap">

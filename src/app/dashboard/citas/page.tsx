@@ -4,11 +4,10 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import SignOutButton from "@/components/SignOutButton";
 import type { CitaConRelaciones, EstadoCita } from "@/types/database";
 import {
   Scissors, Calendar, Clock, User, Plus, Check, X,
-  ChevronLeft, AlertCircle, Phone,
+  AlertCircle, Phone,
 } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -150,8 +149,6 @@ export default function CitasPage() {
   const supabase = useMemo(() => createClient(), []);
 
   const [barberia, setBarberia] = useState<{ id: string; nombre: string } | null>(null);
-  const [userName, setUserName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [citas, setCitas] = useState<CitaConRelaciones[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -163,9 +160,6 @@ export default function CitasPage() {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth/login"); return; }
-      setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario");
-      setAvatarUrl(user.user_metadata?.avatar_url ?? null);
-
       const { data: bar } = await supabase
         .from("barberias")
         .select("id, nombre")
@@ -241,41 +235,7 @@ export default function CitasPage() {
 
   return (
     <div className="min-h-screen bg-base text-ink">
-      {/* Header */}
-      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Scissors className="w-5 h-5 text-gold" />
-              <span className="text-lg font-bold tracking-tight">
-                <span className="text-ink">Barber</span>
-                <span className="text-gold">Flow</span>
-              </span>
-            </Link>
-            {barberia && (
-              <>
-                <span className="hidden sm:block text-line-2">|</span>
-                <span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span>
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={userName} className="w-8 h-8 rounded-full border border-line-2" />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
-                  {userName[0]?.toUpperCase()}
-                </div>
-              )}
-              <span className="text-sm text-ink-2 hidden sm:block">{userName}</span>
-            </div>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
+      <main className="mx-auto max-w-3xl px-4 sm:px-6 py-8">
         {/* Breadcrumb + título */}
         <div className="flex items-center gap-2 text-sm text-ink-3 mb-1">
           <Link href="/dashboard" className="hover:text-ink-2 transition-colors">Dashboard</Link>

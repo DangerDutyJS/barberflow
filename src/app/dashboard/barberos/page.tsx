@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import SignOutButton from "@/components/SignOutButton";
 import type { Barbero } from "@/types/database";
 import { Scissors, X } from "lucide-react";
 
@@ -245,8 +244,6 @@ export default function BarberosPage() {
 
   const [barberos, setBarberos] = useState<Barbero[]>([]);
   const [barberia, setBarberia] = useState<{ id: string; nombre: string } | null>(null);
-  const [userName, setUserName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const [loadingData, setLoadingData] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -259,9 +256,6 @@ export default function BarberosPage() {
     async function cargar() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth/login"); return; }
-
-      setUserName(user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuario");
-      setAvatarUrl(user.user_metadata?.avatar_url ?? null);
 
       const { data: bar } = await supabase
         .from("barberias")
@@ -345,45 +339,9 @@ export default function BarberosPage() {
     mostrarToast("Barbero eliminado");
   }
 
-  const nombre = userName;
-
   return (
     <div className="min-h-screen bg-base text-ink">
-      {/* Header */}
-      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Scissors className="w-5 h-5 text-gold" />
-              <span className="text-lg font-bold tracking-tight">
-                <span className="text-ink">Barber</span>
-                <span className="text-gold">Flow</span>
-              </span>
-            </Link>
-            {barberia && (
-              <>
-                <span className="hidden sm:block text-line-2">|</span>
-                <span className="hidden sm:block text-sm text-ink-2">{barberia.nombre}</span>
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={nombre} className="w-8 h-8 rounded-full border border-line-2" />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-sm font-bold">
-                  {nombre[0]?.toUpperCase()}
-                </div>
-              )}
-              <span className="text-sm text-ink-2 hidden sm:block">{nombre}</span>
-            </div>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
         {/* Breadcrumb + título */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>

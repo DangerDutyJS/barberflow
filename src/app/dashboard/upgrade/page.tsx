@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getEstadoSuscripcion } from "@/lib/subscriptions";
 import { PLANES_WOMPI, type PlanKey } from "@/lib/wompi";
 import type { Suscripcion } from "@/types/database";
-import { Scissors, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface PlanCardProps {
   planKey: PlanKey;
@@ -173,22 +173,7 @@ export default function UpgradePage() {
     <div className="min-h-screen bg-base text-ink">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_-10%,rgba(212,168,83,0.08),transparent)] pointer-events-none" />
 
-      <header className="border-b border-line bg-card/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto max-w-5xl px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Scissors className="w-5 h-5 text-gold" />
-            <span className="text-lg font-bold">
-              <span className="text-ink">Barber</span>
-              <span className="text-gold">Flow</span>
-            </span>
-          </Link>
-          <Link href="/dashboard" className="text-sm text-ink-2 hover:text-ink transition-colors">
-            ← Volver al dashboard
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-4 py-16">
+      <main className="mx-auto max-w-5xl px-4 py-10">
         <div className="text-center mb-12">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
