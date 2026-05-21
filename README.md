@@ -1,7 +1,7 @@
 # BarberFlow — Plataforma de Agendamiento para Barberías
 
 **Deploy activo:** https://barber-rylax.vercel.app  
-**Última actualización:** 2026-05-21
+**Última actualización:** 2026-05-21 — módulo `/b/[slug]` completado
 
 ---
 
@@ -77,11 +77,19 @@
 
 ---
 
+### Página pública de agendamiento (`/b/[slug]`)
+- URL pública por barbería: `/b/mi-barberia` — sin necesidad de cuenta
+- Wizard 4 pasos: Servicio → Barbero → Fecha & Hora → Datos del cliente
+- Slots filtrados según horario real del barbero (tabla `horarios`) y citas existentes
+- Aviso si el barbero no trabaja el día seleccionado
+- Pantalla de éxito con resumen + link a WhatsApp si hay teléfono configurado
+- Manejo de slug no encontrado
+
+---
+
 ## Pendiente
 
-| Módulo | Descripción |
-|--------|-------------|
-| `/b/[slug]` | Página pública de agendamiento para clientes |
+_Todos los módulos han sido implementados._
 
 ---
 
